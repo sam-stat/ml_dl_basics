@@ -1,0 +1,45 @@
+<svg width="860" height="340" viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="860" height="340" fill="#fff"/>
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Batch Normalisation — Per Mini-Batch</text>
+
+  <!-- Step 1: Mini-batch input -->
+  <rect x="14" y="56" width="150" height="80" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+  <text x="89" y="84" text-anchor="middle" font-size="12" font-weight="bold" fill="#2c5f9e">Mini-Batch</text>
+  <text x="89" y="106" text-anchor="middle" font-size="12" font-style="italic" fill="#444">{ z<tspan dy="-6" font-size="8">(i)</tspan><tspan dy="6" font-size="12"> }<tspan dy="5" font-size="9">B</tspan></tspan></text>
+  <text x="89" y="126" text-anchor="middle" font-size="10" fill="#888">B = batch size</text>
+  <line x1="164" y1="96" x2="196" y2="96" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 2: Statistics -->
+  <rect x="196" y="44" width="220" height="104" rx="6" fill="#fff3cd" stroke="#f0ad4e" stroke-width="2"/>
+  <text x="306" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#7d5c00">Compute Statistics</text>
+  <text x="306" y="94" text-anchor="middle" font-size="12" fill="#333">μ<tspan dy="5" font-size="9">ℬ</tspan><tspan dy="-5" font-size="12"> = (1/B) Σ z</tspan><tspan dy="-6" font-size="9">(i)</tspan></text>
+  <text x="306" y="120" text-anchor="middle" font-size="12" fill="#333">σ<tspan dy="-6" font-size="9">2</tspan><tspan dy="6" font-size="12"> = (1/B) Σ (z</tspan><tspan dy="-6" font-size="9">(i)</tspan><tspan dy="6" font-size="12">−μ)</tspan><tspan dy="-6" font-size="9">2</tspan></text>
+  <line x1="416" y1="96" x2="448" y2="96" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 3: Normalise -->
+  <rect x="448" y="44" width="240" height="104" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <text x="568" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d7a2d">Normalise</text>
+  <text x="568" y="94" text-anchor="middle" font-size="11" fill="#333">ẑ<tspan dy="-6" font-size="8">(i)</tspan><tspan dy="6" font-size="11"> = (z</tspan><tspan dy="-6" font-size="8">(i)</tspan><tspan dy="6" font-size="11"> − μ) / √(σ</tspan><tspan dy="-6" font-size="8">2</tspan><tspan dy="6" font-size="11"> + ε)</tspan></text>
+  <text x="568" y="118" text-anchor="middle" font-size="10" fill="#888">ε ≈ 10<tspan dy="-6" font-size="8">−5</tspan><tspan dy="6" font-size="10">  (numerical stability)</tspan></text>
+  <line x1="688" y1="96" x2="720" y2="96" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 4: Scale & Shift -->
+  <rect x="720" y="56" width="126" height="80" rx="6" fill="#fdeaea" stroke="#d9534f" stroke-width="2"/>
+  <text x="783" y="81" text-anchor="middle" font-size="12" font-weight="bold" fill="#9e2c2c">Scale &amp; Shift</text>
+  <text x="783" y="104" text-anchor="middle" font-size="12" fill="#333">y<tspan dy="-6" font-size="8">(i)</tspan><tspan dy="6" font-size="12"> = γ ẑ</tspan><tspan dy="-6" font-size="8">(i)</tspan><tspan dy="6" font-size="12"> + β</tspan></text>
+  <text x="783" y="126" text-anchor="middle" font-size="9" fill="#888">γ, β  learned</text>
+
+  <!-- Why section -->
+  <rect x="14" y="178" width="832" height="148" rx="6" fill="#fafafa" stroke="#e0e0e0" stroke-width="1"/>
+  <text x="430" y="202" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">Why Batch Normalisation Helps</text>
+  <text x="430" y="226" text-anchor="middle" font-size="11" fill="#444">1.  Reduces internal covariate shift — keeps each layer's inputs near zero mean, unit variance</text>
+  <text x="430" y="248" text-anchor="middle" font-size="11" fill="#444">2.  Allows higher learning rates — gradients stay well-scaled through the network</text>
+  <text x="430" y="270" text-anchor="middle" font-size="11" fill="#444">3.  Acts as a regulariser — per-batch noise reduces reliance on individual training samples</text>
+  <text x="430" y="292" text-anchor="middle" font-size="11" fill="#444">4.  At inference: use running mean μ̄ and σ̄<tspan dy="-6" font-size="8">2</tspan><tspan dy="6" font-size="11"> accumulated during training (not batch stats)</tspan></text>
+  <text x="430" y="314" text-anchor="middle" font-size="10" fill="#888">γ = 1, β = 0 initially — model learns to undo normalisation if beneficial</text>
+</svg>

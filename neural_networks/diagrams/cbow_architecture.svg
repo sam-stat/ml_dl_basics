@@ -1,0 +1,71 @@
+<svg width="700" height="400" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="700" height="400" fill="#fff"/>
+  <text x="350" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">CBOW — Continuous Bag of Words</text>
+
+  <!-- Context word boxes -->
+  <rect x="14" y="54" width="130" height="38" rx="5" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+  <text x="79" y="78" text-anchor="middle" font-size="13" font-style="italic" fill="#2c5f9e">w<tspan dy="5" font-size="9">t−2</tspan><tspan dy="-5" font-size="11">  (context)</tspan></text>
+
+  <rect x="14" y="108" width="130" height="38" rx="5" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+  <text x="79" y="132" text-anchor="middle" font-size="13" font-style="italic" fill="#2c5f9e">w<tspan dy="5" font-size="9">t−1</tspan><tspan dy="-5" font-size="11">  (context)</tspan></text>
+
+  <rect x="14" y="162" width="130" height="38" rx="5" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+  <text x="79" y="186" text-anchor="middle" font-size="13" font-style="italic" fill="#2c5f9e">w<tspan dy="5" font-size="9">t+1</tspan><tspan dy="-5" font-size="11">  (context)</tspan></text>
+
+  <rect x="14" y="216" width="130" height="38" rx="5" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+  <text x="79" y="240" text-anchor="middle" font-size="13" font-style="italic" fill="#2c5f9e">w<tspan dy="5" font-size="9">t+2</tspan><tspan dy="-5" font-size="11">  (context)</tspan></text>
+
+  <!-- Arrows → embedding lookup -->
+  <line x1="144" y1="73"  x2="200" y2="73"  stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="144" y1="127" x2="200" y2="127" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="144" y1="181" x2="200" y2="181" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="144" y1="235" x2="200" y2="235" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Embedding boxes -->
+  <rect x="200" y="54"  width="150" height="38" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.5"/>
+  <text x="275" y="78" text-anchor="middle" font-size="12" font-style="italic" fill="#7d5c00">v<tspan dy="5" font-size="8">w</tspan><tspan dy="3" font-size="7">t−2</tspan><tspan dy="-8" font-size="12">  ∈  ℝ</tspan><tspan dy="-6" font-size="8">d</tspan></text>
+
+  <rect x="200" y="108" width="150" height="38" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.5"/>
+  <text x="275" y="132" text-anchor="middle" font-size="12" font-style="italic" fill="#7d5c00">v<tspan dy="5" font-size="8">w</tspan><tspan dy="3" font-size="7">t−1</tspan><tspan dy="-8" font-size="12">  ∈  ℝ</tspan><tspan dy="-6" font-size="8">d</tspan></text>
+
+  <rect x="200" y="162" width="150" height="38" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.5"/>
+  <text x="275" y="186" text-anchor="middle" font-size="12" font-style="italic" fill="#7d5c00">v<tspan dy="5" font-size="8">w</tspan><tspan dy="3" font-size="7">t+1</tspan><tspan dy="-8" font-size="12">  ∈  ℝ</tspan><tspan dy="-6" font-size="8">d</tspan></text>
+
+  <rect x="200" y="216" width="150" height="38" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.5"/>
+  <text x="275" y="240" text-anchor="middle" font-size="12" font-style="italic" fill="#7d5c00">v<tspan dy="5" font-size="8">w</tspan><tspan dy="3" font-size="7">t+2</tspan><tspan dy="-8" font-size="12">  ∈  ℝ</tspan><tspan dy="-6" font-size="8">d</tspan></text>
+
+  <!-- Arrows → average box -->
+  <line x1="350" y1="73"  x2="424" y2="148" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="350" y1="127" x2="424" y2="158" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="350" y1="181" x2="424" y2="168" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="350" y1="235" x2="424" y2="178" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Average box -->
+  <rect x="424" y="128" width="140" height="80" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <text x="494" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d7a2d">Average</text>
+  <text x="494" y="170" text-anchor="middle" font-size="13" font-style="italic" fill="#333">h = (1/n) Σ v<tspan dy="5" font-size="8">wᵢ</tspan></text>
+  <text x="494" y="196" text-anchor="middle" font-size="10" fill="#888">h ∈ ℝ<tspan dy="-6" font-size="8">d</tspan></text>
+
+  <!-- Arrow → softmax -->
+  <line x1="564" y1="168" x2="590" y2="168" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Softmax box -->
+  <rect x="590" y="128" width="96" height="80" rx="6" fill="#fdeaea" stroke="#d9534f" stroke-width="2"/>
+  <text x="638" y="152" text-anchor="middle" font-size="12" font-weight="bold" fill="#9e2c2c">Softmax</text>
+  <text x="638" y="171" text-anchor="middle" font-size="11" fill="#333">P(w<tspan dy="5" font-size="8">t</tspan><tspan dy="-5" font-size="11"> | ctx)</tspan></text>
+  <text x="638" y="193" text-anchor="middle" font-size="10" fill="#888">over |V|</text>
+
+  <!-- Formula box -->
+  <rect x="14" y="295" width="672" height="90" rx="5" fill="#fafafa" stroke="#e0e0e0" stroke-width="1"/>
+  <text x="350" y="318" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CBOW Objective</text>
+  <text x="116" y="348" text-anchor="start" font-size="12" fill="#333">P(w<tspan dy="5" font-size="8">t</tspan><tspan dy="-5" font-size="12"> | context) =</tspan></text>
+  <text x="260" y="340" text-anchor="middle" font-size="12" fill="#333">exp(u<tspan dy="-6" font-size="8">⊤</tspan><tspan dy="6" font-size="8">w</tspan><tspan dy="3" font-size="7">t</tspan><tspan dy="-3" font-size="12"> · h)</tspan></text>
+  <line x1="232" y1="344" x2="330" y2="344" stroke="#333" stroke-width="1"/>
+  <text x="280" y="362" text-anchor="middle" font-size="12" fill="#333">Σ<tspan dy="5" font-size="8">k∈V</tspan><tspan dy="-5" font-size="12">  exp(u</tspan><tspan dy="-6" font-size="8">⊤</tspan><tspan dy="6" font-size="8">k</tspan><tspan dy="3" font-size="12"> · h)</tspan></text>
+  <text x="350" y="375" text-anchor="middle" font-size="10" fill="#888">u<tspan dy="5" font-size="7">w</tspan><tspan dy="-5" font-size="10"> = output embedding,  v<tspan dy="5" font-size="7">w</tspan><tspan dy="-5" font-size="10"> = input embedding  (two separate weight matrices)</tspan></tspan></text>
+</svg>

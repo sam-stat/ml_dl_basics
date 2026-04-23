@@ -1,0 +1,69 @@
+<svg width="420" height="630" viewBox="0 0 420 630" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="420" height="630" fill="#fff"/>
+  <text x="210" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Transformer Encoder Block</text>
+
+  <!-- Input -->
+  <rect x="90" y="46" width="240" height="50" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+  <text x="210" y="67" text-anchor="middle" font-size="12" font-weight="bold" fill="#2c5f9e">Input + Positional Enc.</text>
+  <text x="210" y="85" text-anchor="middle" font-size="11" font-style="italic" fill="#555">x ∈ ℝ<tspan dy="-6" font-size="8">n × d</tspan></text>
+  <line x1="210" y1="96" x2="210" y2="118" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- MHA box -->
+  <rect x="50" y="118" width="320" height="60" rx="6" fill="#f0f8ff" stroke="#5bc0de" stroke-width="2"/>
+  <text x="210" y="143" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a7a9a">Multi-Head Attention</text>
+  <text x="210" y="163" text-anchor="middle" font-size="11" fill="#555">Attention(Q, K, V)  with  h  independent heads</text>
+
+  <!-- Residual skip MHA -->
+  <line x1="46" y1="96" x2="46" y2="210" stroke="#aaa" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="90" y1="96" x2="46" y2="96" stroke="#aaa" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="210" y1="178" x2="210" y2="200" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Add & Norm 1 -->
+  <rect x="90" y="200" width="240" height="46" rx="6" fill="#f9f0ff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="210" y="220" text-anchor="middle" font-size="12" font-weight="bold" fill="#6c3483">Add &amp; Norm</text>
+  <text x="210" y="237" text-anchor="middle" font-size="10" fill="#555">LayerNorm(x + MHA output)</text>
+  <line x1="46" y1="210" x2="88" y2="220" stroke="#aaa" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="210" y1="246" x2="210" y2="268" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- FFN box -->
+  <rect x="50" y="268" width="320" height="72" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <text x="210" y="291" text-anchor="middle" font-size="13" font-weight="bold" fill="#2d7a2d">Feed-Forward Network</text>
+  <text x="210" y="313" text-anchor="middle" font-size="11" fill="#444">FFN(x) = ReLU(xW<tspan dy="5" font-size="8">1</tspan><tspan dy="-5" font-size="11"> + b</tspan><tspan dy="5" font-size="8">1</tspan><tspan dy="-5" font-size="11">) W</tspan><tspan dy="5" font-size="8">2</tspan><tspan dy="-5" font-size="11"> + b</tspan><tspan dy="5" font-size="8">2</tspan></text>
+  <text x="210" y="330" text-anchor="middle" font-size="10" fill="#888">applied independently to each position</text>
+
+  <!-- Residual skip FFN -->
+  <line x1="46" y1="246" x2="46" y2="370" stroke="#aaa" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="90" y1="246" x2="46" y2="246" stroke="#aaa" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="210" y1="340" x2="210" y2="362" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Add & Norm 2 -->
+  <rect x="90" y="362" width="240" height="46" rx="6" fill="#f9f0ff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="210" y="382" text-anchor="middle" font-size="12" font-weight="bold" fill="#6c3483">Add &amp; Norm</text>
+  <text x="210" y="399" text-anchor="middle" font-size="10" fill="#555">LayerNorm(x + FFN output)</text>
+  <line x1="46" y1="370" x2="88" y2="380" stroke="#aaa" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+  <!-- × N bracket -->
+  <rect x="30" y="110" width="364" height="308" rx="6" fill="none" stroke="#ddd" stroke-width="1.5" stroke-dasharray="7,5"/>
+  <text x="402" y="270" font-size="10" fill="#bbb" transform="rotate(90,402,270)">×  N  layers</text>
+
+  <line x1="210" y1="408" x2="210" y2="430" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Output representations -->
+  <rect x="90" y="430" width="240" height="46" rx="6" fill="#fdeaea" stroke="#d9534f" stroke-width="2"/>
+  <text x="210" y="450" text-anchor="middle" font-size="12" font-weight="bold" fill="#9e2c2c">Output Representations</text>
+  <text x="210" y="466" text-anchor="middle" font-size="10" fill="#555">one vector h<tspan dy="5" font-size="8">i</tspan><tspan dy="-5" font-size="10"> ∈ ℝ</tspan><tspan dy="-6" font-size="8">d</tspan><tspan dy="6" font-size="10"> per token</tspan></text>
+
+  <line x1="210" y1="476" x2="210" y2="498" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- CLS Task Head -->
+  <rect x="70" y="498" width="280" height="56" rx="6" fill="#fff3cd" stroke="#f0ad4e" stroke-width="2"/>
+  <text x="210" y="519" text-anchor="middle" font-size="12" font-weight="bold" fill="#856404">[CLS] token  →  Task Head</text>
+  <text x="210" y="540" text-anchor="middle" font-size="11" fill="#444">ŷ = softmax(W h<tspan dy="5" font-size="8">CLS</tspan><tspan dy="-5" font-size="11"> + b)</tspan></text>
+
+  <text x="210" y="610" text-anchor="middle" font-size="10" fill="#aaa">Dashed lines = residual (skip) connections</text>
+</svg>

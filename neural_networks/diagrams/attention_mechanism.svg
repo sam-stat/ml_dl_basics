@@ -1,0 +1,69 @@
+<svg width="720" height="480" viewBox="0 0 720 480" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#555"/>
+    </marker>
+    <marker id="ag" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#27ae60"/>
+    </marker>
+  </defs>
+  <rect width="720" height="480" fill="#fff"/>
+
+  <!-- Title -->
+  <text x="360" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Self-Attention — Scaled Dot-Product</text>
+
+  <!-- Input box -->
+  <rect x="210" y="48" width="300" height="54" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+  <text x="360" y="71" text-anchor="middle" font-size="13" font-weight="bold" fill="#2c5f9e">Input  X ∈ ℝ<tspan dy="-6" font-size="9">n × d</tspan></text>
+  <text x="360" y="90" text-anchor="middle" font-size="10" fill="#888">n tokens,  each a d-dimensional vector</text>
+
+  <!-- Fan-out arrows -->
+  <line x1="306" y1="102" x2="138" y2="150" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="360" y1="102" x2="360" y2="150" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="414" y1="102" x2="582" y2="150" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Q box -->
+  <rect x="28" y="150" width="220" height="68" rx="6" fill="#fef0e7" stroke="#e67e22" stroke-width="2"/>
+  <text x="138" y="175" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0560a">Q = X W<tspan dy="-7" font-size="9">Q</tspan></text>
+  <text x="138" y="197" text-anchor="middle" font-size="10" fill="#888">"What am I looking for?"</text>
+
+  <!-- K box -->
+  <rect x="250" y="150" width="220" height="68" rx="6" fill="#fef9e7" stroke="#f39c12" stroke-width="2"/>
+  <text x="360" y="175" text-anchor="middle" font-size="13" font-weight="bold" fill="#b7770d">K = X W<tspan dy="-7" font-size="9">K</tspan></text>
+  <text x="360" y="197" text-anchor="middle" font-size="10" fill="#888">"What do I contain?"</text>
+
+  <!-- V box -->
+  <rect x="472" y="150" width="220" height="68" rx="6" fill="#edfaed" stroke="#27ae60" stroke-width="2"/>
+  <text x="582" y="175" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e8449">V = X W<tspan dy="-7" font-size="9">V</tspan></text>
+  <text x="582" y="197" text-anchor="middle" font-size="10" fill="#888">"What information to pass?"</text>
+
+  <!-- W annotation — single text element -->
+  <text x="360" y="234" text-anchor="middle" font-size="10" fill="#aaa">W<tspan dy="5" font-size="8">Q</tspan><tspan dy="-5" font-size="10">,  W</tspan><tspan dy="5" font-size="8">K</tspan><tspan dy="-5" font-size="10">,  W</tspan><tspan dy="5" font-size="8">V</tspan><tspan dy="-5" font-size="10">  ∈  ℝ</tspan><tspan dy="-5" font-size="8">d × d</tspan><tspan dy="2" font-size="7">k</tspan><tspan dy="3" font-size="10">  — learned projection matrices</tspan></text>
+
+  <!-- Q+K → Score arrows -->
+  <line x1="138" y1="218" x2="256" y2="264" stroke="#e67e22" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="360" y1="218" x2="328" y2="264" stroke="#f39c12" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Score box -->
+  <rect x="170" y="264" width="380" height="60" rx="6" fill="#fdf8f0" stroke="#f39c12" stroke-width="2"/>
+  <text x="360" y="289" text-anchor="middle" font-size="13" font-weight="bold" fill="#8e5c00">Score = Q K<tspan dy="-7" font-size="9">⊤</tspan><tspan dy="7" font-size="13"> / √d</tspan><tspan dy="5" font-size="9">k</tspan></text>
+  <text x="360" y="311" text-anchor="middle" font-size="10" fill="#888">dot-product similarity, scaled to prevent softmax saturation</text>
+
+  <!-- Score → Softmax -->
+  <line x1="360" y1="324" x2="360" y2="350" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Softmax box -->
+  <rect x="210" y="350" width="300" height="56" rx="6" fill="#f9f0ff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="360" y="374" text-anchor="middle" font-size="13" font-weight="bold" fill="#6c3483">A = softmax(Score)</text>
+  <text x="360" y="394" text-anchor="middle" font-size="10" fill="#888">attention weights  A ∈ ℝ<tspan dy="-6" font-size="8">n × n</tspan><tspan dy="6" font-size="10">,  rows sum to 1</tspan></text>
+
+  <!-- Softmax → Output -->
+  <line x1="360" y1="406" x2="360" y2="432" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- V → Output arrow -->
+  <line x1="582" y1="218" x2="444" y2="436" stroke="#27ae60" stroke-width="1.5" marker-end="url(#ag)"/>
+
+  <!-- Output box -->
+  <rect x="190" y="432" width="340" height="36" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <text x="360" y="454" text-anchor="middle" font-size="13" font-weight="bold" fill="#2d7a2d">Z = A V  ∈  ℝ<tspan dy="-6" font-size="9">n × d</tspan><tspan dy="6" font-size="13">  (attended output)</tspan></text>
+</svg>

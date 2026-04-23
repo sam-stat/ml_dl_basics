@@ -1,0 +1,61 @@
+<svg width="460" height="580" viewBox="0 0 460 580" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="460" height="580" fill="#fff"/>
+  <text x="230" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">RAG — Retrieval Augmented Generation</text>
+
+  <!-- Step 1 -->
+  <rect x="115" y="46" width="230" height="48" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+  <text x="230" y="66" text-anchor="middle" font-size="13" font-weight="bold" fill="#2c5f9e">① User Query</text>
+  <text x="230" y="84" text-anchor="middle" font-size="10" fill="#888">"What is photosynthesis?"</text>
+  <line x1="230" y1="94" x2="230" y2="114" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 2 -->
+  <rect x="90" y="114" width="280" height="48" rx="6" fill="#fff3cd" stroke="#f0ad4e" stroke-width="2"/>
+  <text x="230" y="134" text-anchor="middle" font-size="13" font-weight="bold" fill="#856404">② Embed Query</text>
+  <text x="230" y="152" text-anchor="middle" font-size="11" fill="#555">q = Encoder(query)  ∈  ℝ<tspan dy="-6" font-size="8">d</tspan></text>
+  <line x1="230" y1="162" x2="230" y2="182" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 3 -->
+  <rect x="66" y="182" width="328" height="56" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <text x="230" y="203" text-anchor="middle" font-size="13" font-weight="bold" fill="#2d7a2d">③ Vector Search</text>
+  <text x="230" y="222" text-anchor="middle" font-size="11" fill="#555">cos(q, d<tspan dy="5" font-size="8">i</tspan><tspan dy="-5" font-size="11">) = (q · d<tspan dy="5" font-size="8">i</tspan><tspan dy="-5" font-size="11">) / (‖q‖ ‖d<tspan dy="5" font-size="8">i</tspan><tspan dy="-5" font-size="11">‖)</tspan></tspan></text>
+  <text x="230" y="233" text-anchor="middle" font-size="9" fill="#888">FAISS / Pinecone</text>
+
+  <!-- Knowledge base side -->
+  <rect x="8" y="196" width="52" height="28" rx="4" fill="#f5f5f5" stroke="#bbb" stroke-width="1.5"/>
+  <text x="34" y="209" text-anchor="middle" font-size="9" fill="#666">Knowledge</text>
+  <text x="34" y="220" text-anchor="middle" font-size="9" fill="#666">Base</text>
+  <line x1="60" y1="210" x2="66" y2="210" stroke="#bbb" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <line x1="230" y1="238" x2="230" y2="258" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 4 -->
+  <rect x="90" y="258" width="280" height="48" rx="6" fill="#f2f9fd" stroke="#5bc0de" stroke-width="2"/>
+  <text x="230" y="279" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a7a9a">④ Top-k Documents</text>
+  <text x="230" y="296" text-anchor="middle" font-size="10" fill="#555">most relevant retrieved passages</text>
+  <line x1="230" y1="306" x2="230" y2="326" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 5 -->
+  <rect x="54" y="326" width="352" height="64" rx="6" fill="#f9f0ff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="230" y="348" text-anchor="middle" font-size="13" font-weight="bold" fill="#6c3483">⑤ Augmented Prompt</text>
+  <text x="230" y="366" text-anchor="middle" font-size="10" fill="#444">"Context:  [retrieved documents]</text>
+  <text x="230" y="381" text-anchor="middle" font-size="10" fill="#444">Question:  [original query]"</text>
+  <line x1="230" y1="390" x2="230" y2="410" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 6 -->
+  <rect x="120" y="410" width="220" height="48" rx="6" fill="#fdeaea" stroke="#d9534f" stroke-width="2"/>
+  <text x="230" y="430" text-anchor="middle" font-size="13" font-weight="bold" fill="#9e2c2c">⑥ LLM Generation</text>
+  <text x="230" y="448" text-anchor="middle" font-size="10" fill="#555">generates grounded answer</text>
+  <line x1="230" y1="458" x2="230" y2="478" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 7 -->
+  <rect x="90" y="478" width="280" height="48" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <text x="230" y="498" text-anchor="middle" font-size="13" font-weight="bold" fill="#2d7a2d">⑦ Grounded Answer</text>
+  <text x="230" y="516" text-anchor="middle" font-size="10" fill="#888">factual, not hallucinated</text>
+
+  <text x="230" y="558" text-anchor="middle" font-size="10" fill="#aaa">LLM only has training data — RAG adds fresh knowledge at query time</text>
+</svg>

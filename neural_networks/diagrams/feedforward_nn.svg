@@ -1,0 +1,90 @@
+<svg width="640" height="420" viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="640" height="420" fill="#fff"/>
+
+  <!-- Layer title labels -->
+  <text x="130" y="28" text-anchor="middle" font-size="13" fill="#444">Input Layer</text>
+  <text x="340" y="28" text-anchor="middle" font-size="13" fill="#444">Hidden Layer</text>
+  <text x="520" y="28" text-anchor="middle" font-size="13" fill="#444">Output Layer</text>
+  <line x1="84"  y1="33" x2="176" y2="33" stroke="#ccc" stroke-width="1"/>
+  <line x1="290" y1="33" x2="390" y2="33" stroke="#ccc" stroke-width="1"/>
+  <line x1="480" y1="33" x2="560" y2="33" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Connections: input → hidden -->
+  <g stroke="#bbb" stroke-width="1.2" fill="none">
+    <line x1="158" y1="80"  x2="308" y2="116" marker-end="url(#arr)"/>
+    <line x1="158" y1="80"  x2="308" y2="196" marker-end="url(#arr)"/>
+    <line x1="158" y1="80"  x2="308" y2="276" marker-end="url(#arr)"/>
+    <line x1="158" y1="150" x2="308" y2="116" marker-end="url(#arr)"/>
+    <line x1="158" y1="150" x2="308" y2="196" marker-end="url(#arr)"/>
+    <line x1="158" y1="150" x2="308" y2="276" marker-end="url(#arr)"/>
+    <line x1="158" y1="220" x2="308" y2="116" marker-end="url(#arr)"/>
+    <line x1="158" y1="220" x2="308" y2="196" marker-end="url(#arr)"/>
+    <line x1="158" y1="220" x2="308" y2="276" marker-end="url(#arr)"/>
+    <line x1="158" y1="290" x2="308" y2="116" marker-end="url(#arr)"/>
+    <line x1="158" y1="290" x2="308" y2="196" marker-end="url(#arr)"/>
+    <line x1="158" y1="290" x2="308" y2="276" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- Connections: hidden → output -->
+  <g stroke="#bbb" stroke-width="1.2" fill="none">
+    <line x1="368" y1="116" x2="484" y2="196" marker-end="url(#arr)"/>
+    <line x1="368" y1="196" x2="484" y2="196" marker-end="url(#arr)"/>
+    <line x1="368" y1="276" x2="484" y2="196" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- Input arrows from left -->
+  <g stroke="#333" stroke-width="1.5" fill="none">
+    <line x1="60" y1="80"  x2="100" y2="80"  marker-end="url(#arr)"/>
+    <line x1="60" y1="150" x2="100" y2="150" marker-end="url(#arr)"/>
+    <line x1="60" y1="220" x2="100" y2="220" marker-end="url(#arr)"/>
+    <line x1="60" y1="290" x2="100" y2="290" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- Input labels -->
+  <text x="55" y="75"  text-anchor="end" font-size="13" font-style="italic" fill="#555">x<tspan dy="5" font-size="9">1</tspan></text>
+  <text x="55" y="145" text-anchor="end" font-size="13" font-style="italic" fill="#555">x<tspan dy="5" font-size="9">2</tspan></text>
+  <text x="55" y="215" text-anchor="end" font-size="13" font-style="italic" fill="#555">x<tspan dy="5" font-size="9">3</tspan></text>
+  <text x="55" y="285" text-anchor="end" font-size="13" font-style="italic" fill="#555">x<tspan dy="5" font-size="9">4</tspan></text>
+
+  <!-- Input nodes -->
+  <circle cx="130" cy="80"  r="30" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+  <circle cx="130" cy="150" r="30" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+  <circle cx="130" cy="220" r="30" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+  <circle cx="130" cy="290" r="30" fill="#eef4fb" stroke="#4f86c6" stroke-width="2"/>
+
+  <!-- Hidden nodes -->
+  <circle cx="338" cy="116" r="30" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <circle cx="338" cy="196" r="30" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+  <circle cx="338" cy="276" r="30" fill="#edfaed" stroke="#5cb85c" stroke-width="2"/>
+
+  <!-- Output node -->
+  <circle cx="514" cy="196" r="30" fill="#fdeaea" stroke="#d9534f" stroke-width="2"/>
+
+  <!-- Node labels -->
+  <text x="130" y="85"  text-anchor="middle" font-size="14" font-style="italic" fill="#2c5f9e">x<tspan dy="5" font-size="9">1</tspan></text>
+  <text x="130" y="155" text-anchor="middle" font-size="14" font-style="italic" fill="#2c5f9e">x<tspan dy="5" font-size="9">2</tspan></text>
+  <text x="130" y="225" text-anchor="middle" font-size="14" font-style="italic" fill="#2c5f9e">x<tspan dy="5" font-size="9">3</tspan></text>
+  <text x="130" y="295" text-anchor="middle" font-size="14" font-style="italic" fill="#2c5f9e">x<tspan dy="5" font-size="9">4</tspan></text>
+  <text x="338" y="121" text-anchor="middle" font-size="13" font-style="italic" fill="#2d7a2d">a<tspan dy="5" font-size="8">1</tspan><tspan dy="-5" font-size="9">  </tspan><tspan dy="-6" font-size="8">(1)</tspan></text>
+  <text x="338" y="201" text-anchor="middle" font-size="13" font-style="italic" fill="#2d7a2d">a<tspan dy="5" font-size="8">2</tspan><tspan dy="-5" font-size="9">  </tspan><tspan dy="-6" font-size="8">(1)</tspan></text>
+  <text x="338" y="281" text-anchor="middle" font-size="13" font-style="italic" fill="#2d7a2d">a<tspan dy="5" font-size="8">3</tspan><tspan dy="-5" font-size="9">  </tspan><tspan dy="-6" font-size="8">(1)</tspan></text>
+  <text x="514" y="201" text-anchor="middle" font-size="14" font-style="italic" fill="#9e2c2c">ŷ</text>
+
+  <!-- Output arrow -->
+  <line x1="544" y1="196" x2="590" y2="196" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="596" y="192" font-size="12" fill="#555">output</text>
+
+  <!-- Weight labels -->
+  <text x="234" y="130" text-anchor="middle" font-size="12" font-style="italic" fill="#666">W<tspan dy="-6" font-size="8">(1)</tspan></text>
+  <text x="430" y="162" text-anchor="middle" font-size="12" font-style="italic" fill="#666">W<tspan dy="-6" font-size="8">(2)</tspan></text>
+
+  <!-- Formula annotation -->
+  <rect x="30" y="346" width="580" height="60" rx="5" fill="#fafafa" stroke="#e0e0e0" stroke-width="1"/>
+  <text x="320" y="367" text-anchor="middle" font-size="12" fill="#333">Pre-activation:   z<tspan dy="-6" font-size="9">(ℓ)</tspan><tspan dy="6" font-size="12"> = W</tspan><tspan dy="-6" font-size="9">(ℓ)</tspan><tspan dy="6" font-size="12"> a</tspan><tspan dy="-6" font-size="9">(ℓ−1)</tspan><tspan dy="6" font-size="12"> + b</tspan><tspan dy="-6" font-size="9">(ℓ)</tspan></text>
+  <text x="320" y="390" text-anchor="middle" font-size="12" fill="#333">Post-activation:  a<tspan dy="-6" font-size="9">(ℓ)</tspan><tspan dy="6" font-size="12"> = σ(z</tspan><tspan dy="-6" font-size="9">(ℓ)</tspan><tspan dy="6" font-size="12">)   where  a</tspan><tspan dy="-6" font-size="9">(0)</tspan><tspan dy="6" font-size="12"> = x</tspan></text>
+</svg>
