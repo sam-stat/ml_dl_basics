@@ -1,0 +1,1 @@
+The current repo is having the detailed notes of the neural network section from the short notes all topics PDF. 

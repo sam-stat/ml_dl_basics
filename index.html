@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML / DL Study Notes</title>
+
+<!-- MathJax must be configured before its script loads -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath:  [['$','$'],['\\(','\\)']],
+    displayMath: [['$$','$$'],['\\[','\\]']],
+    processEscapes: true
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<style>
+/* ── Design tokens ── */
+:root {
+  --sidebar-w:       268px;
+  --sidebar-bg:      #0a2e18;
+  --sidebar-hover:   #12401f;
+  --sidebar-text:    #86efac;
+  --sidebar-dim:     rgba(134,239,172,0.45);
+  --sidebar-active-bg:     rgba(34,197,94,0.14);
+  --sidebar-active-border: #22c55e;
+  --sidebar-active-text:   #4ade80;
+
+  --bg:      #ffffff;
+  --surface: #f0fdf4;
+  --border:  #d1fae5;
+
+  --text:       #111827;
+  --text-muted: #4b5563;
+  --heading:    #052e16;
+
+  --accent:       #16a34a;
+  --accent-hover: #15803d;
+
+  --code-bg:    #f0fdf4;
+  --radius:     8px;
+  --shadow-card: 0 2px 12px rgba(22,163,74,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: #1a4d2e transparent;
+}
+
+.sidebar-brand {
+  padding: 26px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer;
+}
+.sidebar-brand:hover { background: var(--sidebar-hover); }
+.sidebar-brand h1 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #f0fdf4;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+.sidebar-brand p {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: rgba(255,255,255,0.28);
+}
+
+/* Collapsible section group */
+.nav-group { border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+.nav-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.nav-group-header:hover { background: var(--sidebar-hover); }
+
+.nav-group-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35);
+  font-weight: 600;
+}
+.nav-group-chevron {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.25);
+  transition: transform 0.2s;
+}
+.nav-group.open .nav-group-chevron { transform: rotate(90deg); }
+
+.nav-group-body { display: none; padding: 4px 0 8px; }
+.nav-group.open .nav-group-body { display: block; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 20px 7px 24px;
+  color: var(--sidebar-text);
+  font-size: 0.845rem;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.1s, color 0.1s;
+  user-select: none;
+}
+.nav-item:hover { background: var(--sidebar-hover); color: #d1fae5; }
+.nav-item.active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  border-left-color: var(--sidebar-active-border);
+  font-weight: 500;
+}
+.nav-icon { width: 16px; text-align: center; font-style: normal; flex-shrink: 0; font-size: 0.85rem; }
+
+/* ════════════════════════════════════════
+   MAIN AREA
+════════════════════════════════════════ */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.93);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 40px;
+  z-index: 50;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.topbar .sep { opacity: 0.5; }
+.topbar strong { color: var(--heading); font-weight: 500; }
+
+/* ── Article typography ── */
+#article {
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 52px 44px 100px;
+}
+
+#article h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--heading);
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+#article h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 44px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: -0.02em;
+}
+#article h3 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 28px 0 10px;
+}
+#article h4 {
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 22px 0 8px;
+}
+#article p { margin-bottom: 16px; }
+#article ul, #article ol { margin: 10px 0 18px 22px; }
+#article li { margin-bottom: 5px; }
+#article li > ul, #article li > ol { margin: 6px 0 4px 18px; }
+
+#article blockquote {
+  border-left: 3px solid var(--accent);
+  background: #ecfdf5;
+  padding: 14px 20px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 22px 0;
+  color: #065f46;
+  font-size: 0.95rem;
+}
+#article hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+#article a { color: var(--accent); text-decoration: none; }
+#article a:hover { text-decoration: underline; }
+
+/* Tables */
+#article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+#article th {
+  background: var(--surface);
+  font-weight: 600;
+  font-size: 0.73rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+#article td { padding: 9px 14px; border-bottom: 1px solid #e9faf0; vertical-align: top; }
+#article tr:last-child td { border-bottom: none; }
+#article tbody tr:hover td { background: var(--surface); }
+
+/* Code */
+#article code {
+  font-family: 'SF Mono','Fira Code','Cascadia Code',Consolas,monospace;
+  font-size: 0.82em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: #166534;
+}
+#article pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+#article pre code {
+  background: none; border: none; padding: 0;
+  color: inherit; font-size: 0.855rem; line-height: 1.65;
+}
+#article pre .hljs { background: transparent; padding: 0; }
+
+/* Images / SVG diagrams */
+#article img {
+  max-width: 100%;
+  display: block;
+  margin: 32px auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* ════════════════════════════════════════
+   HOME PAGE
+════════════════════════════════════════ */
+.home-hero {
+  text-align: center;
+  padding: 52px 0 44px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 44px;
+}
+.home-hero h1 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--heading);
+  margin-bottom: 12px;
+}
+.home-hero p {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.section-row { margin-bottom: 44px; }
+.section-row-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-row-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 14px;
+}
+.topic-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  background: #fff;
+}
+.topic-card:hover {
+  border-color: #86efac;
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+.card-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 6px;
+}
+.card-title {
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 7px;
+  line-height: 1.3;
+}
+.card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+
+/* ── Loading state ── */
+.loading {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 80px 0; color: var(--text-muted); gap: 14px;
+}
+.spinner {
+  width: 30px; height: 30px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Mobile menu button ── */
+#menu-btn {
+  display: none;
+  position: fixed; top: 10px; left: 10px; z-index: 200;
+  background: var(--sidebar-bg); color: #86efac;
+  border: none; border-radius: var(--radius);
+  width: 38px; height: 38px; font-size: 1.1rem;
+  cursor: pointer; align-items: center; justify-content: center;
+}
+
+/* ── Responsive ── */
+@media (max-width: 800px) {
+  #menu-btn { display: flex; }
+  .sidebar { transform: translateX(-100%); transition: transform 0.22s cubic-bezier(.4,0,.2,1); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  #article { padding: 62px 20px 80px; }
+  .topbar { padding: 10px 20px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .home-hero h1 { font-size: 1.7rem; }
+}
+</style>
+</head>
+<body>
+
+<button id="menu-btn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+
+<!-- ════ SIDEBAR ════ -->
+<nav class="sidebar" id="sidebar">
+
+  <div class="sidebar-brand" onclick="navigate('')">
+    <h1>ML / DL Study Notes</h1>
+    <p>Sam's reference guide</p>
+  </div>
+
+  <!-- Each .nav-group is a subject area — add more here as you expand the PDF -->
+  <div class="nav-group open" id="grp-nn">
+    <div class="nav-group-header" onclick="toggleGroup('grp-nn')">
+      <span class="nav-group-title">Neural Networks</span>
+      <span class="nav-group-chevron">▶</span>
+    </div>
+    <div class="nav-group-body">
+      <div class="nav-item" data-file="neural_networks/01_basic_neural_networks.md" onclick="navigate('neural_networks/01_basic_neural_networks.md')">
+        <i class="nav-icon">01</i> Basic Neural Networks
+      </div>
+      <div class="nav-item" data-file="neural_networks/02_training_issues.md" onclick="navigate('neural_networks/02_training_issues.md')">
+        <i class="nav-icon">02</i> Training Issues
+      </div>
+      <div class="nav-item" data-file="neural_networks/03_word_embeddings.md" onclick="navigate('neural_networks/03_word_embeddings.md')">
+        <i class="nav-icon">03</i> Word Embeddings
+      </div>
+      <div class="nav-item" data-file="neural_networks/04_rnns_lstms.md" onclick="navigate('neural_networks/04_rnns_lstms.md')">
+        <i class="nav-icon">04</i> RNNs &amp; LSTMs
+      </div>
+      <div class="nav-item" data-file="neural_networks/05_cnns.md" onclick="navigate('neural_networks/05_cnns.md')">
+        <i class="nav-icon">05</i> CNNs
+      </div>
+      <div class="nav-item" data-file="neural_networks/06_transformers.md" onclick="navigate('neural_networks/06_transformers.md')">
+        <i class="nav-icon">06</i> Transformers
+      </div>
+      <div class="nav-item" data-file="neural_networks/07_architecture_guide.md" onclick="navigate('neural_networks/07_architecture_guide.md')">
+        <i class="nav-icon">07</i> Architecture Guide
+      </div>
+      <div class="nav-item" data-file="neural_networks/08_agents_llms.md" onclick="navigate('neural_networks/08_agents_llms.md')">
+        <i class="nav-icon">08</i> Agents &amp; LLMs
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────
+       ADD FUTURE SECTIONS HERE by copy-pasting a
+       new .nav-group block above this comment.
+  ─────────────────────────────────────────────── -->
+
+</nav>
+
+<!-- ════ MAIN ════ -->
+<div class="main">
+  <div class="topbar">
+    <span>ML / DL Notes</span>
+    <span class="sep">›</span>
+    <strong id="breadcrumb">Home</strong>
+  </div>
+  <div id="article"></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   Site data — extend this to add new sections
+════════════════════════════════════════ */
+const SECTIONS = [
+  {
+    id: 'neural_networks',
+    title: 'Neural Networks',
+    desc: 'From perceptrons to agents — with diagrams and maths.',
+    topics: [
+      { file: 'neural_networks/01_basic_neural_networks.md', tag: '01', title: 'Basic Neural Networks',      desc: 'Perceptron, activation functions, feedforward networks, backpropagation.' },
+      { file: 'neural_networks/02_training_issues.md',        tag: '02', title: 'Training Issues & Solutions', desc: 'Vanishing gradients, overfitting, batch normalisation, dropout, optimisers.' },
+      { file: 'neural_networks/03_word_embeddings.md',        tag: '03', title: 'Word Embeddings',            desc: 'Word2Vec, GloVe, CBOW, Skip-gram, and distributed representations.' },
+      { file: 'neural_networks/04_rnns_lstms.md',             tag: '04', title: 'RNNs & LSTMs',              desc: 'Recurrent networks, LSTM gates, vanishing gradients in sequences.' },
+      { file: 'neural_networks/05_cnns.md',                   tag: '05', title: 'Convolutional Networks',    desc: 'Convolution, pooling, receptive fields, and standard CNN architectures.' },
+      { file: 'neural_networks/06_transformers.md',           tag: '06', title: 'Transformers & Attention',  desc: 'Self-attention, multi-head attention, positional encoding, encoder–decoder.' },
+      { file: 'neural_networks/07_architecture_guide.md',     tag: '07', title: 'Architecture Guide',        desc: 'Choosing the right architecture — a decision framework.' },
+      { file: 'neural_networks/08_agents_llms.md',            tag: '08', title: 'Agents & LLMs',             desc: 'Large language models, RAG, tool use, agentic systems, prompting.' },
+    ]
+  }
+  /* Add future sections here:
+  ,{
+    id: 'ml_basics',
+    title: 'ML Basics',
+    topics: [ ... ]
+  } */
+];
+
+/* ════════════════════════════════════════
+   Markdown → HTML pipeline
+════════════════════════════════════════ */
+marked.use({ gfm: true, breaks: false });
+
+// Protect math from marked's markdown parser
+function protectMath(md) {
+  const store = [];
+  const out = md
+    .replace(/\$\$([\s\S]+?)\$\$/g, m => { store.push(m); return 'DMATH' + (store.length-1) + 'DMATHEND'; })
+    .replace(/\$([^\$\n]+?)\$/g,    m => { store.push(m); return 'IMATH' + (store.length-1) + 'IMATHEND'; });
+  return { out, store };
+}
+
+function restoreMath(html, store) {
+  return html
+    .replace(/DMATH(\d+)DMATHEND/g, (_, i) => store[+i])
+    .replace(/IMATH(\d+)IMATHEND/g, (_, i) => store[+i]);
+}
+
+// Rewrite relative image src to be root-relative
+function fixImages(html, basePath) {
+  return html.replace(/<img([^>]*?)src="([^"]+)"([^>]*?)>/g, (full, pre, src, post) => {
+    if (/^(https?:|\/|data:)/.test(src)) return full;
+    return `<img${pre}src="${basePath}${src}"${post}>`;
+  });
+}
+
+// Tag internal .md links so click delegation can intercept them
+function fixLinks(html, basePath) {
+  return html.replace(/href="([^"]+\.md)"/g, (_, href) => {
+    const resolved = /^https?:/.test(href) ? href : basePath + href;
+    return `href="javascript:void(0)" data-md="${resolved}"`;
+  });
+}
+
+/* ════════════════════════════════════════
+   Routing (hash-based, shareable URLs)
+════════════════════════════════════════ */
+function navigate(filePath) {
+  location.hash = filePath ? '#' + filePath : '#';
+}
+
+window.addEventListener('hashchange', handleRoute);
+
+function handleRoute() {
+  const hash = decodeURIComponent(location.hash.replace(/^#/, ''));
+  hash ? loadFile(hash) : showHome();
+}
+
+/* ════════════════════════════════════════
+   Active sidebar state
+════════════════════════════════════════ */
+function setActive(filePath) {
+  document.querySelectorAll('.nav-item').forEach(el =>
+    el.classList.toggle('active', el.dataset.file === filePath)
+  );
+  const active = document.querySelector(`.nav-item[data-file="${filePath}"]`);
+  document.getElementById('breadcrumb').textContent =
+    active ? active.textContent.trim() : 'Home';
+}
+
+/* ════════════════════════════════════════
+   Home page (card grid)
+════════════════════════════════════════ */
+function showHome() {
+  setActive('');
+  document.getElementById('breadcrumb').textContent = 'Home';
+
+  const sectionsHtml = SECTIONS.map(sec => `
+    <div class="section-row">
+      <div class="section-row-label">${sec.title}</div>
+      <div class="card-grid">
+        ${sec.topics.map(t => `
+          <div class="topic-card" onclick="navigate('${t.file}')">
+            <div class="card-tag">${t.tag}</div>
+            <div class="card-title">${t.title}</div>
+            <div class="card-desc">${t.desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('article').innerHTML = `
+    <div class="home-hero">
+      <h1>ML / DL Study Notes</h1>
+      <p>Structured notes with diagrams and maths, built from short-notes PDFs.</p>
+    </div>
+    ${sectionsHtml}`;
+
+  window.scrollTo(0, 0);
+  closeSidebarMobile();
+}
+
+/* ════════════════════════════════════════
+   Load & render a markdown file
+════════════════════════════════════════ */
+async function loadFile(filePath) {
+  setActive(filePath);
+
+  const art = document.getElementById('article');
+  art.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading…</span></div>';
+
+  const lastSlash = filePath.lastIndexOf('/');
+  const basePath  = lastSlash >= 0 ? filePath.slice(0, lastSlash + 1) : '';
+
+  try {
+    const res = await fetch(filePath);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const raw = await res.text();
+
+    const { out: prot, store } = protectMath(raw);
+    let html = marked.parse(prot);
+    html = restoreMath(html, store);
+    html = fixImages(html, basePath);
+    html = fixLinks(html, basePath);
+
+    art.innerHTML = html;
+
+    // Syntax-highlight code blocks
+    art.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+
+    // Typeset maths
+    if (window.MathJax?.typesetPromise) {
+      await MathJax.typesetPromise([art]);
+    }
+
+    window.scrollTo(0, 0);
+  } catch (err) {
+    art.innerHTML = `
+      <div style="text-align:center;padding:80px 0;color:#6b7280">
+        <p style="font-size:2rem;margin-bottom:12px">⚠️</p>
+        <p>Could not load <code style="background:#f0fdf4;border:1px solid #d1fae5;padding:2px 6px;border-radius:4px">${filePath}</code></p>
+        <p style="font-size:0.83rem;margin-top:8px;color:#9ca3af">${err.message}</p>
+      </div>`;
+  }
+
+  closeSidebarMobile();
+}
+
+/* ════════════════════════════════════════
+   Delegated click for internal .md links
+════════════════════════════════════════ */
+document.getElementById('article').addEventListener('click', e => {
+  const a = e.target.closest('[data-md]');
+  if (!a) return;
+  e.preventDefault();
+  navigate(a.dataset.md);
+});
+
+/* ════════════════════════════════════════
+   Sidebar helpers
+════════════════════════════════════════ */
+function toggleGroup(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function closeSidebarMobile() {
+  if (window.innerWidth <= 800)
+    document.getElementById('sidebar').classList.remove('open');
+}
+
+/* ════════════════════════════════════════
+   Init
+════════════════════════════════════════ */
+handleRoute();
+</script>
+
+</body>
+</html>

@@ -77,12 +77,22 @@ Use blockquotes for key insights:
 
 Every SVG must:
 
-1. **Use proper mathematical notation** using Unicode sub/superscripts and math symbols:
-   - Subscripts: `₀₁₂₃₄₅₆₇₈₉` `ₐₑₒₓₙₘₖₗₜ`
-   - Superscripts: `⁰¹²³⁴⁵⁶⁷⁸⁹⁽⁾ˡⁿ⁻`
-   - Symbols: `∂ ∑ ∈ ℝ ⊙ ⊕ σ μ ε γ β ∇ ≈ →`
-   - Layer superscripts: `W⁽ˡ⁾`, `a⁽ˡ⁻¹⁾`, `z⁽ˡ⁾` (using `⁽ˡ⁾` = U+207D + U+02E1 + U+207E)
-   - For complex sub/superscripts not in Unicode, use SVG `<tspan dy="-8" font-size="0.8em">` offsets
+1. **Use proper mathematical notation** — ALL sub/superscripts must be inline `<tspan>` offsets within the parent `<text>` element. **Never use separate `<text>` elements** for subscripts or superscripts; manually-placed coordinates misalign due to font rendering variance.
+
+   **Subscript pattern** (shift down, then reset):
+   ```xml
+   W<tspan dy="5" font-size="9">ij</tspan><tspan dy="-5" font-size="12"> continues here</tspan>
+   ```
+
+   **Superscript pattern** (shift up, then reset):
+   ```xml
+   z<tspan dy="-6" font-size="9">(ℓ)</tspan><tspan dy="6" font-size="12"> continues here</tspan>
+   ```
+
+   - Use **absolute pixel offsets** (not `em`): `dy="5"` for subscripts, `dy="-6"` for superscripts
+   - Shifted glyph size: `font-size="9"` (use `8` for very small); always reset to parent size after
+   - Multi-character scripts go in one tspan: `<tspan dy="5" font-size="9">t−1</tspan>`
+   - Math symbols — use Unicode directly in text content: `∂ ∑ ∈ ℝ ⊙ ⊕ σ μ ε γ β ∇ ≈ → ×`
 
 2. **Use serif font** — `font-family="Georgia, 'Times New Roman', serif"` — for mathematical feel
 
