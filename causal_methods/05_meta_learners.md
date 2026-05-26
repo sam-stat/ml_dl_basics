@@ -41,56 +41,36 @@ $$\mu_1(x) = E[Y\mid x, T=1], \quad \mu_0(x) = E[Y\mid x, T=0] \qquad \hat{\tau}
 
 ## X-Learner (crossed learner)
 
-**Start with the problem.** Real campaigns are **imbalanced** — e.g. 99% treated, 1% held out. Two
-failures bite:
-
-- The T-learner's tiny control model $\mu_0$ is data-starved and noisy.
-- Worse, computing uplift as $\mu_1 - \mu_0$ is **"weighing the ship to find the captain":** if
-  conversion is 90% baseline + 10% treatment, both models pour their capacity into the 90% baseline,
-  and you subtract two large numbers to find a small one — a 1% error in either swamps the effect.
-
-**The idea.** Two moves fix this:
-
-1. **Borrow the big model** to fill each user's missing counterfactual (the large treated group makes
-   $\mu_1$ accurate).
-2. **Target the gap directly** so the final learner spends its capacity on the *effect*, not the
-   baseline.
-
-**Derive it.** Write a treated user's outcome as baseline + effect: $Y(1) = Y(0) + \tau(x)$, so
-$\tau(x) = Y(1) - Y(0)$. We know one term and impute the other with the *other group's* model, giving
-an **imputed per-user effect**:
-
-- Treated user (know $Y$, impute the no-treatment world): $\;D_1 = Y - \mu_0(x)$
-- Control user (know $Y$, impute the treated world): $\;D_0 = \mu_1(x) - Y$
-
-Because $Y$ already *contains* the baseline, subtracting the predicted baseline **strips it away** —
-$D$ is (noisy) uplift only. Now fit **new models whose target is the gap**:
-
-$$\tau_1(x) \approx D_1 \;\;(\text{treated}), \qquad \tau_0(x) \approx D_0 \;\;(\text{control})$$
-
-**Combine by trust.** Weight each side by the propensity score $e(x) = P(T=1\mid X=x)$ — lean on
-whichever side has more data:
-
+- **Goal.** Estimate $\tau(x) = E[Y(1) - Y(0)\mid x]$. If we saw *both* worlds per user it'd be a label
+  to regress on $X$ — but each user shows only one.
+- **① Impute → $\tilde{D}$.** Since $\tau = Y(1) - Y(0)$, keep the *observed* potential outcome and
+  impute the *missing* one with the **other** group's T-stage model — $\mu_0(x)$ guesses $Y(0)$,
+  $\mu_1(x)$ guesses $Y(1)$. Each user gets a per-user effect $\tilde{D}$ = real − imputed (noisy uplift only):
+  - treated (observed $Y = Y(1)$): $\;\tilde{D}_1 = Y(1) - \mu_0(x)$
+  - control (observed $Y = Y(0)$): $\;\tilde{D}_0 = \mu_1(x) - Y(0)$
+- **② Regress → $\tau_0(x),\,\tau_1(x)$.** Fit $\tau_1(x) \approx \tilde{D}_1$ on treated users and
+  $\tau_0(x) \approx \tilde{D}_0$ on control users — the *same* features $x$, but the **target flips from
+  $Y$ to $\tilde{D}$**, and that flip is the whole point:
+  - *Attention.* The baseline models chased $Y$, so they spent their capacity on features that move the
+    large baseline and could ignore one that only moves the small effect. Retargeting on $\tilde{D}$
+    forces a fresh model to hunt exactly the effect-driving features (a T-learner's $\mu_1 - \mu_0$ can't).
+  - *Generalize + denoise.* A raw $\tilde{D}$ exists only for training users and is a noisy point estimate;
+    the regression turns it into a smooth function that scores unseen users and averages out per-user noise.
+  - *Common domain.* $\tilde{D}_1$ and $\tilde{D}_0$ live on different people — only as functions of $x$
+    can ③ blend them at the same point.
+- **What breaks** — each route leans on the *opposite* group's model, so they fail in opposite regimes:
+  - $\tilde{D}_1$ uses $\mu_0$ (control): small control → noisy labels, but $\tau_1$ trains on the broad treated set.
+  - $\tilde{D}_0$ uses $\mu_1$ (treated): huge treated → clean labels, but $\tau_0$ trains on few controls (narrow).
+- **③ Combine → $\hat{\tau}(x)$.** Weight the regression outputs $\tau_0(x),\,\tau_1(x)$ (**not** the raw
+  $\tilde{D}$'s) by propensity $e(x) = P(T=1\mid x)$, leaning on the better-fed side:
 $$\hat{\tau}(x) = e(x)\,\tau_0(x) + \big(1 - e(x)\big)\,\tau_1(x)$$
+  - **99% treated:** $e \approx 0.99$ → trusts $\tau_0$ (labels from the accurate $\mu_1$); starved $\mu_0$ barely counts.
+  - **50/50:** $e = 0.5$ → equal weight.
+- **Keep both** — the two trade-offs above are complementary, so blending them is an ensemble; and at
+  50/50 propensity weights them equally, so dropping $\tilde{D}_1$ would waste half a balanced experiment.
 
-- **Imbalanced (99% treated):** $e(x) \approx 0.99$ → leans on $\tau_0$. Why is that the *good* one?
-  $\tau_0$ trains on labels $D_0 = \mu_1(x) - Y$, and $\mu_1$ came from the *huge* treated group — so
-  those labels are high quality despite few control users. The slider routes weight to the pathway
-  whose labels were made by the *accurate* base model.
-- **Balanced (50/50):** $e(x) = 0.5$ → both sides equally, no data wasted.
-
-**Why keep $D_1$ if the weight goes to $D_0$?**
-
-- **Feature diversity** — $\tau_0$ has clean labels but trains on few control users (overfits, narrow
-  feature space); $\tau_1$ has noisier labels but trains on the whole treated population
-  (generalizes). The blend is an ensemble of "clean labels / narrow features" + "noisy labels / broad
-  features."
-- **Generality** — at 50/50 the propensity term gives $D_1$ equal weight automatically; hardcoding
-  "use $D_0$ only" would throw away half of a balanced experiment.
-
-> **Key idea:** the X-learner lets the *large* group's intelligence flow into the *small* group's
-> estimates via cross-imputation, targets the effect directly (not the baseline), then re-weights by
-> group size so a data-starved control set never corrupts the scores.
+> **Key idea:** ① impute a per-user effect $\tilde{D}$ from each group, ② regress it on $x$ into two
+> functions $\tau_0(x),\,\tau_1(x)$, ③ propensity-weight them so the better-fed base model dominates.
 
 ---
 
