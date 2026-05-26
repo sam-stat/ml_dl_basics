@@ -6,8 +6,6 @@ experiment that *creates* a causal contrast to the ML that *personalizes* it. (T
 *define and identify* effects — Potential Outcomes and SCMs/DAGs — are theory, not estimators, and
 live in [estimands](02_estimands.md).)
 
-Each method below is `<type>: <method>` with its core idea, key assumption, and a *use-when*.
-
 ![The methods taxonomy](diagrams/method_taxonomy.svg)
 
 ## Why this hierarchy

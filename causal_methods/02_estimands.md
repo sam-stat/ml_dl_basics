@@ -1,23 +1,22 @@
 # Estimands: What Exactly Are We Trying to Measure?
 
 Before picking a method, name the **number** you want. *"Does the notification work?"* has at least
-three precise answers that can disagree. An **estimand** is that precise target — defined *before* you
-touch data or algorithms. Get it wrong and a perfectly fit model answers a question nobody asked.
+three precise answers that can disagree. An **estimand** is that target — defined *before* you touch
+data or algorithms. Get it wrong and a perfectly fit model answers a question nobody asked.
 
 ---
 
 ## Two frameworks for defining an effect
 
-You first need a *language* to state what "an effect" is. Two are standard — and both are **theory,
-not estimators** (the estimators that operationalize them live in the
-[methods taxonomy](03_methods_taxonomy.md)):
+First you need a *language* for "an effect." Two are standard — both **theory, not estimators** (the
+estimators that operationalize them live in the [methods taxonomy](03_methods_taxonomy.md)):
 
 - **Potential Outcomes** — causation as a *missing-data problem*.
-  - Give every unit two hypothetical outcomes: $Y_i(1)$ (if treated), $Y_i(0)$ (if not).
-  - Individual effect $= Y_i(1) - Y_i(0)$, but you only ever observe one → the other is missing.
-  - The notation $Y(1), Y(0)$ flags these as **counterfactual** (what *could* happen) — distinct from
-    filtering the database to rows where $T=1$ (what you *observed*).
-  - Becomes a clean contrast only under **ignorability** (formalized in the last section).
+  - Each unit has two hypothetical outcomes: $Y_i(1)$ (if treated), $Y_i(0)$ (if not).
+  - Individual effect $= Y_i(1) - Y_i(0)$, but you only observe one → the other is missing.
+  - $Y(1), Y(0)$ are **counterfactual** (what *could* happen) — distinct from filtering the database
+    to rows where $T=1$ (what you *observed*).
+  - Becomes a clean contrast only under **ignorability** (last section).
 - **Structural Causal Models (SCMs) & DAGs** — causation as a *graph*.
   - Draw the assumed cause→effect arrows; interventions use the **do-operator** $do(X=x)$ — *forcing*
     a value, not observing it.
@@ -29,44 +28,31 @@ not estimators** (the estimators that operationalize them live in the
 
 ---
 
-## Average Treatment Effect (ATE)
+## The three estimands: ATE, CATE, ATT
 
-> *"If we treated everyone vs no one, what is the average change?"*
+**Average Treatment Effect (ATE)** — *"if we treated everyone vs no one, what is the average change?"*
 
 $$\text{ATE} = E\big[\,Y(1) - Y(0)\,\big]$$
 
-- The single global number — use it for a rollout go/no-go.
-- Weakness: an ATE near zero can hide a treatment that **helps half the users and hurts the other
-  half** (the effects cancel).
+The single global number — use it for a rollout go/no-go. Weakness: an ATE near zero can hide a
+treatment that **helps half the users and hurts the other half** (the effects cancel).
 
----
-
-## Conditional Average Treatment Effect (CATE)
-
-> *"For **this kind** of user, what is the average change?"*
+**Conditional ATE (CATE)** — *"for **this kind** of user, what is the average change?"*
 
 $$\tau(x) = E\big[\,Y(1) - Y(0) \mid X = x\,\big]$$
 
-- The ATE **conditioned on features** $X = x$ — the engine of personalization.
-- Lets the effect vary: an overall $+2\%$ can be $+13\%$ for one segment and $-5\%$ for another.
-- Everything in [meta-learners](05_meta_learners.md) and [DML](06_double_machine_learning.md)
-  estimates $\tau(x)$.
+The ATE conditioned on features $X = x$ — the engine of personalization. Lets the effect vary: an
+overall $+2\%$ can be $+13\%$ for one segment and $-5\%$ for another. Everything in
+[meta-learners](05_meta_learners.md) and [DML](06_double_machine_learning.md) estimates $\tau(x)$.
 
----
-
-## Average Treatment Effect on the Treated (ATT)
-
-> *"For the users who **actually got** treated, what was the average change?"*
+**ATE on the Treated (ATT)** — *"for the users who **actually got** treated, what was the average
+change?"*
 
 $$\text{ATT} = E\big[\,Y(1) - Y(0) \mid T = 1\,\big]$$
 
-- Restricts the average to the treated subpopulation — matters when treatment is **not** random.
-- Example: an offer only shown to users who open the app. ATE imagines forcing it on *everyone*
-  (diluting with users who never log in); ATT isolates the effect on those the policy actually reached.
-
----
-
-## Which estimand answers which question
+Restricts the average to the treated subpopulation — matters when treatment is **not** random. E.g. an
+offer shown only to users who open the app: ATE imagines forcing it on *everyone* (diluting with users
+who never log in); ATT isolates the effect on those the policy actually reached.
 
 | Estimand | Conditioning | Question | Typical use |
 |----------|-------------|----------|-------------|
@@ -117,11 +103,10 @@ hold? Only under **ignorability** / **unconfoundedness**:
 
 $$\big(Y(1), Y(0)\big) \perp\!\!\!\perp T \;\mid\; X$$
 
-- In words: once you condition on $X$, *who gets treated is independent of how they would respond* —
-  no hidden variable steers both.
-- This is the "no unclosed backdoor path" condition from [foundations](01_foundations.md), written
-  formally.
-- When it holds (an RCT, or $X$ captures all confounders), CATE becomes fully observable:
+In words: once you condition on $X$, *who gets treated is independent of how they would respond* — no
+hidden variable steers both. This is the "no unclosed backdoor path" condition from
+[foundations](01_foundations.md), written formally. When it holds (an RCT, or $X$ captures all
+confounders), CATE becomes fully observable:
 
 $$\tau(x) = E[\,Y \mid X = x, T = 1\,] - E[\,Y \mid X = x, T = 0\,]$$
 
