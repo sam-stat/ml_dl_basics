@@ -16,28 +16,9 @@ single scalar and adjust on that.
   - **Unconfoundedness** — $(Y(1), Y(0)) \perp\!\!\!\perp T \mid X$: $X$ captures everything driving both
     treatment and outcome.
   - **Positivity (overlap)** — $0 < e(x) < 1$ for every $x$: every unit could in principle land in either arm.
-
----
-
-## Why one scalar is enough — the balancing theorem
-
-- **Theorem (Rosenbaum & Rubin, 1983).** If unconfoundedness holds on the full vector $X$, it also holds
-  on the scalar score:
-$$(Y(1), Y(0)) \perp\!\!\!\perp T \mid X \quad\Longrightarrow\quad (Y(1), Y(0)) \perp\!\!\!\perp T \mid e(X)$$
-- **Why it makes sense.** $e(X)$ is a **balancing score**: among units that share the same $e(X)$, the
-  *distribution of $X$ is identical* across treated and control — $X \perp\!\!\!\perp T \mid e(X)$. Two
-  units can reach $e = 0.3$ via different covariate profiles, but on average treated and control units at
-  a given score carry the same covariates, so conditioning on the one number removes the same confounding
-  as conditioning on the whole vector.
-- **What it buys.** A 1-D sufficient statistic for confounding adjustment — match or weight on a scalar
-  instead of an intractable high-dimensional vector.
-- **What it does *not* relax.**
-  - Holds for the **true** $e(x)$; in practice you fit $\hat e(x)$, so a misspecified model breaks balance
-    → **balance diagnostics are mandatory**.
-  - Says nothing about **unobserved** confounders — compressing a flawed adjustment set into a scalar keeps the flaw.
-
-> **Key idea:** the propensity score is a dimensionality-reduction trick *conditional on*
-> selection-on-observables. It makes the estimator tractable; it does not weaken the identifying assumption.
+  - **Balancing theorem (Rosenbaum & Rubin, 1983).** Unconfoundedness on $X$ implies it on the scalar
+    $e(X)$, because $X \perp\!\!\!\perp T \mid e(X)$ — collapsing the high-dimensional vector into one
+    scalar loses nothing for confounding adjustment, provided $\hat e(x)$ actually balances $X$ in practice.
 
 ---
 
@@ -49,14 +30,27 @@ Matching rebuilds an approximate experiment by giving every treated unit a stati
   **Exclude post-treatment variables** — anything *caused by* the treatment biases the score.
 - **② Fit the propensity model.** Binary classifier with target $T$, features $X$ (logistic regression
   classically; tree ensembles when flexible). Predict $\hat e(x)$ for every unit.
-- **③ Check overlap.** Plot $\hat e(x)$ by group; keep the common-support region.
-- **④ Match.** Nearest-neighbour on $\hat e(x)$. Parameters:
+- **③ Choose the fitting scheme — same data vs K-fold cross-fitting.**
+  - *Same data.* Defensible for classical logistic-regression PSM — $Y$ never enters the propensity
+    model, so overfitting $T$ only yields a noisier matching key, and success is judged by balance on
+    this same sample.
+  - *Issues with same-data fitting*, especially under flexible models (GBM / RF / NN):
+    - the model can *perfectly separate* the arms in-sample, producing a spurious bimodal-at-0/1
+      $\hat e(x)$ histogram — overfitting masquerading as a positivity violation;
+    - weights blow up or most of the sample is discarded under caliper;
+    - balance diagnostics on the training sample stop being a reliable check.
+  - *K-fold cross-fitting* fixes this. Split the data into $K$ folds (typically $K = 5$ or $10$); for
+    each fold $k$, fit the model on the other $K - 1$ folds and predict $\hat e(x)$ on fold $k$
+    (out-of-fold); stack so every unit has a score from a model that never trained on it. Use these
+    out-of-fold scores for matching / weighting downstream — no separate holdout needed.
+- **④ Check overlap.** Plot $\hat e(x)$ by group; keep the common-support region.
+- **⑤ Match.** Nearest-neighbour on $\hat e(x)$. Parameters:
   - *with / without replacement* — may one control serve several treated (usually without);
   - *caliper* — maximum allowed score gap; a treated unit with no control inside it is dropped;
   - variants: $k{:}1$, kernel, stratification, full / optimal matching.
-- **⑤ Assess balance.** Standardized Mean Difference (SMD) per covariate on the matched sample; **SMD < 0.1**
+- **⑥ Assess balance.** Standardized Mean Difference (SMD) per covariate on the matched sample; **SMD < 0.1**
   is the usual threshold. If it fails, revise $X$ / model / caliper and re-match.
-- **⑥ Estimate the effect** as a mean difference on the matched sample.
+- **⑦ Estimate the effect** as a mean difference on the matched sample.
 
 ---
 
@@ -86,7 +80,9 @@ $$\hat\tau_i = \begin{cases} Y_i - \hat Y_i(0), & T_i = 1 \\[4pt] \hat Y_i(1) - 
 
 ## Positivity: where ATT and ATE break
 
-Positivity is the assumption most often silently violated — and the violation sinks every method, not just PSM.
+The failure is local and concrete: in some region of $\hat e(x)$, a treated unit has no comparable
+control to borrow $\hat Y(0)$ from (or a control has no comparable treated to borrow $\hat Y(1)$ from),
+so there is no counterfactual to impute.
 
 ```
 Density
@@ -99,72 +95,22 @@ Density
 0                           1
 ```
 
-- **Overlap region.** The treated and control $\hat e(x)$ distributions overlap in the middle and thin
-  out at opposite tails.
-- **ATE is hit harder than ATT.**
-  - ATT needs controls only where treated units sit — the abundant-control / few-treated tail is
-    irrelevant (no treated units to match there).
-  - ATE needs matches both ways, so that same tail now demands treated matches for abundant controls —
-    imputing the outcome of "treating a unit that is essentially never treated" is **extrapolation, not matching**.
-- **Deterministic assignment = total positivity failure.** If treatment is a deterministic rule on
-  variables that are themselves in $X$, then $\hat e(x) \in \{0, 1\}$: the two arms live on disjoint
-  points, there is **no overlap**, and the effect is **not identified** — a property of the data, not the algorithm.
-- **The absence of overlap breaks every method, not only PSM** — it just surfaces differently:
-  - **PSM** — no controls share the treated scores; matching is undefined.
-  - **IPW** — $1/\hat e(x)$ or $1/(1 - \hat e(x))$ → division by zero, weights → $\infty$.
-  - **Regression / S-learner** — one arm is empty in that region; the model only extrapolates from
-    functional-form assumptions.
-  - **AIPW / TMLE** — both nuisance models fail in the same region; double robustness guards against
-    *misspecification when positivity holds*, not against its violation.
-  - **Causal forests / meta-learners** — no within-neighbourhood treatment variation → nothing to split
-    on, no counterfactual signal.
+- **ATE is hit harder than ATT.** ATT only needs controls where treated units sit; ATE needs matches in
+  *both* directions, so the abundant-control / few-treated tail also breaks — no treated units to impute
+  $\hat Y(1)$ for those controls.
+- **Deterministic assignment = total failure.** If treatment is a deterministic rule on variables that
+  are themselves in $X$, then $\hat e(x) \in \{0, 1\}$: the two arms live on disjoint points and the
+  effect is **not identified** — a property of the data, not the algorithm.
 - **ATT can still fail, but narrowly** — treated units in regions with no comparable controls force
-  either bad far matches (bias) or caliper drops. After drops you estimate ATT on the *matched subset*,
-  not the full ATT; report how many treated units were removed.
-- **Fixes when overlap is poor.**
-  - Restrict to the common-support / overlap subpopulation (a redefined estimand — the ATO).
-  - Inject randomization (a small holdout) or find exogenous variation in assignment.
-  - Use stabilized IPW or overlap weights (below).
-  - Don't silently drop perfectly-separating deterministic-rule covariates — that trades a positivity
-    violation for a confounding one.
+  either bad far matches (bias) or caliper drops; after drops you estimate ATT on the matched subset,
+  not the full ATT, so report the drop count.
+- **Fixes when overlap is poor.** Restrict to the common-support / overlap subpopulation (a redefined
+  estimand — the ATO); inject randomization or find exogenous variation in assignment; use trimming or
+  overlap weights (below).
 
-> **Key idea:** plot the $\hat e(x)$ histograms *first*. A bimodal-at-0-and-1 shape means the effect is
-> not identified — no method recovers it.
-
----
-
-## Data for the propensity model: same sample vs cross-fitting
-
-The propensity model is a **nuisance** function, not the final answer, so its train/test logic differs from predictive ML.
-
-- **Classical PSM — the same data is fine.**
-  - The model predicts $T$ from $X$; the outcome $Y$ never enters it, so overfitting $T$ only yields a
-    noisier *matching key*, not bias in the treatment–outcome link.
-  - Success is judged by **balance on this sample**, not out-of-sample accuracy.
-  - Abadie & Imbens (2016): using the *estimated* score can even *lower* the matching estimator's
-    variance versus the true score.
-- **When same-data breaks — flexible, high-capacity models.** GBM / RF / NN can find an $\hat e(x)$ that
-  *perfectly separates* the arms in-sample even when true overlap is fine → a bimodal-at-0/1 histogram.
-  This is **overfitting masquerading as a positivity violation**; weights explode or most of the sample
-  gets discarded.
-- **Fix — cross-fitting** (DML-style; Chernozhukov et al. 2018).
-  - Split into $K$ folds (typically $K = 5$ or $10$).
-  - For each fold $k$: fit the model on the other $K - 1$ folds, predict $\hat e(x)$ on fold $k$ (**out-of-fold**).
-  - Stack predictions → every unit has a score from a model that never saw it during training.
-  - Use these out-of-fold scores downstream. This restores $\sqrt{n}$-consistency and asymptotic
-    normality even with ML nuisances; repeat over several splits to cut split-induced variance.
-  - **Cross-fitting replaces the need for a separate holdout** — the $K$-fold structure supplies the independence.
-- **Decision rule.**
-
-| Use same-data when | Use cross-fitting when |
-|--------------------|------------------------|
-| logistic regression, modest feature set | GBM / RF / neural-net propensity model |
-| classical PSM with balance checks | DML, AIPW, TMLE, any doubly-robust method |
-| large $n$ vs dimensionality, sane histogram | CATE via meta-learners (orthogonality needs it) |
-| | high-dimensional $X$, tight $n/p$, high-stakes results |
-
-- An **outcome model** $\hat\mu_t(x) = E[Y \mid X, T]$ (for AIPW / meta-learners) touches $Y$ directly →
-  cross-fitting is effectively mandatory there.
+> **Key idea:** if **positivity** or **unconfoundedness** breaks, no method recovers the effect — PSM,
+> IPW, regression, AIPW, and causal forests all fail in the same region for the same reason. Plot the
+> $\hat e(x)$ histograms first; bimodal-at-0-and-1 means the effect is not identified.
 
 ---
 
@@ -175,12 +121,16 @@ population — a synthetic randomized experiment.
 
 - **Weights.**
 $$w_i = \begin{cases} 1 / \hat e(x_i), & T_i = 1 \\[4pt] 1 / (1 - \hat e(x_i)), & T_i = 0 \end{cases}$$
-- **Why it works.** Upweight the under-represented in each arm. A unit with low $e(x)$ observed as
-  *treated* is rare relative to how often that profile appears in the population, so its weight $1/e$ is
-  large and lets it stand in for the similar units who went untreated; the same unit observed as
-  *control* is abundant and gets a weight near 1. After weighting, each arm's covariate distribution
-  matches the population's. (The same inverse-probability correction Horvitz & Thompson (1952) used for
-  unequal-probability survey sampling.)
+- **Why it works.**
+  - Upweight the **under-represented** units in each arm so each arm matches the population on $X$.
+  - A unit with low $e(x)$ observed as *treated* is rare relative to how often that profile appears in
+    the population → its weight $1/e$ is large, letting it stand in for the similar units who went untreated.
+  - The same unit observed as *control* is abundant in that region → it gets a weight near 1, no
+    amplification needed.
+  - After weighting, the treated and control arms have matching covariate distributions, so the
+    weighted mean difference behaves like a synthetic randomized experiment.
+  - This is the same inverse-probability correction Horvitz & Thompson (1952) used for
+    unequal-probability survey sampling.
 - **ATE estimator** — a weighted mean difference; no matching, no caliper:
 $$\widehat{\text{ATE}}_{\text{IPW}} = \frac{1}{N} \sum_{i=1}^{N} \frac{T_i\, Y_i}{\hat e(x_i)} \;-\; \frac{1}{N} \sum_{i=1}^{N} \frac{(1 - T_i)\, Y_i}{1 - \hat e(x_i)}$$
 - **ATT by reweighting** — treated keep weight 1 (already the target); controls are tilted to the treated
@@ -207,15 +157,9 @@ Both use the same score; the trade-off is data efficiency and a clean ATE versus
   unit can dominate the estimate. Remedies:
   - **Trimming / truncation** — cap weights (e.g. 1st/99th percentile, or a fixed ceiling). Small bias,
     large variance reduction.
-  - **Stabilized weights** (Robins et al. 2000) — multiply by the marginal treatment probability so weights cluster near 1:
-$$w_i^{\text{stab}} = \begin{cases} P(T = 1) / \hat e(x_i), & T_i = 1 \\[4pt] P(T = 0) / (1 - \hat e(x_i)), & T_i = 0 \end{cases}$$
   - **Overlap weights** (Li, Morgan, Zaslavsky 2018) — $1 - \hat e(x)$ for treated, $\hat e(x)$ for
     controls; bounded in $[0, 1]$, cannot explode, and implicitly target the overlap population.
-- **Doubly-robust upgrade — AIPW.** Combine weighting with an outcome model $\hat\mu_t(x)$; consistent if
-  *either* the propensity *or* the outcome model is correct:
-$$\widehat{\text{ATE}}_{\text{AIPW}} = \frac{1}{N} \sum_{i=1}^{N} \Big[ \hat\mu_1(x_i) - \hat\mu_0(x_i) + \frac{T_i\,(Y_i - \hat\mu_1(x_i))}{\hat e(x_i)} - \frac{(1 - T_i)\,(Y_i - \hat\mu_0(x_i))}{1 - \hat e(x_i)} \Big]$$
-  With cross-fitting this is the DML / AIPW workhorse behind EconML and DoubleML (see [DML](06_double_machine_learning.md)).
 
 > **Key idea:** matching is a 0/1 special case of weighting (neighbourhood membership). IPW is the more
 > general lens — reach for matching when you want an auditable cohort story and the ATT, and for IPW
-> (stabilized / overlap, or AIPW) when you want the ATE on all the data.
+> (with trimming or overlap weights) when you want the ATE on all the data.
