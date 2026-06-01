@@ -124,54 +124,108 @@ The algebra says no — and it starts from the model for $Y$ itself.
 
 ---
 
-## Why the error stays controlled: Neyman orthogonality
+## The score function, and why it debiases
 
 The ML models $\hat\ell$ and $\hat m$ are never exact. The worry is that their errors leak straight
-into $\hat\theta$. **Neyman orthogonality** is the property that stops this — and note it is *not* an
-assumption about the data (like ignorability); it's a property we **engineer into the score** by
-choosing the residual-on-residual form.
+into $\hat\theta$. The machinery that stops the leak lives entirely in the **score function** — so
+this section builds it from the ground up: what a score is, how it produces $\hat\theta$, and what we
+must demand of it so that imperfect nuisances don't matter.
 
-- **Orthogonality = the score is flat in the nuisance direction.** Think of the *expected* score
-  $E[\psi]$ as a function of the nuisances $\eta = (\ell, m)$, with $\theta$ held at its true value
-  $\theta_0$. The condition is that its **derivative with respect to $\eta$, evaluated at the true
-  nuisances $\eta_0$, vanishes**:
+### What a score function is
 
-  $$\partial_\eta\, E\big[\psi(W;\,\theta_0,\, \eta)\big]\big|_{\eta = \eta_0} = 0, \qquad \eta = (\ell, m)$$
+A **score** (or *moment function*) $\psi$ is a function of the data $W = (Y, T, X)$, the target
+$\theta$, and the nuisances $\eta = (\ell, m)$, built so that its **expectation is zero exactly at the
+truth**:
 
-  - This is a derivative *in the function direction*: it asks how $E[\psi]$ responds when you perturb
-    the whole function $\ell$ (or $m$) slightly away from the truth $\ell_0$ (or $m_0$) — a
-    directional (Gâteaux) derivative, not an ordinary $\partial/\partial x$.
-  - Its being zero means $E[\psi]$ sits at a **flat spot** in the nuisance direction at $\eta_0$. So
-    nudging $\hat\ell$ or $\hat m$ slightly off the truth barely moves $\theta$'s estimating equation —
-    a single nuisance error can't tilt $\hat\theta$.
+$$E\big[\psi(W;\,\theta, \eta_0)\big] = 0 \quad\Longleftrightarrow\quad \theta = \theta_0.$$
 
-- **Why the first derivative is the thing that matters — Taylor's view.** Let $\delta = \hat\eta -
-  \eta_0$ be the nuisance error (small, since the ML models are decent). The bias in $\hat\theta$ is a
-  function of $\delta$, and a Taylor expansion around the truth $\delta = 0$ reads:
+You never minimise a loss directly; you find the $\hat\theta$ that drives the *sample* average of the
+score to zero — $\frac{1}{N}\sum_i \psi(W_i;\,\hat\theta, \hat\eta) = 0$. This is all of M-estimation,
+including OLS.
 
-  $$\text{bias}(\delta) \;=\; \underbrace{\text{bias}(0)}_{=\,0} \;+\; \underbrace{b'\,\delta}_{\text{first order}} \;+\; \underbrace{\tfrac{1}{2}\,b''\,\delta^2}_{\text{second order}} \;+\; \cdots$$
+- **Linear-regression anchor.** Ordinary least squares *is* a score estimator. Its score is
+  "residual $\times$ regressor", $\psi_{\text{OLS}} = X(Y - X^\top\beta)$, and the condition
+  $E[X(Y - X^\top\beta_0)] = 0$ just says *the residual must be uncorrelated with the regressor*.
+  Setting the sample version to zero gives the normal equations. Keep this picture — DML reuses the
+  exact same shape on residualized variables.
 
-  - $\text{bias}(0) = 0$: plug in the *true* nuisances and the score gives the right answer.
-  - The **first-order term $b'\delta$** is *linear* in the error. Because $\delta$ is small,
-    $\delta \gg \delta^2$, so this term **dominates** — whatever rate $b'\delta$ shrinks at is the rate
-    the whole bias shrinks at. Its coefficient $b'$ is exactly the derivative $\partial_\eta E[\psi]$
-    from above.
-  - **That is why we care about the first derivative:** it is the coefficient of the dominant term.
-    Orthogonality *sets $b' = 0$*, deleting the entire linear term and promoting the much smaller
-    second-order term to be the leader.
+### Our score, and how it gives $\hat\theta$
 
-- **What's left is only a product.** With $b' = 0$, the leading survivor is the **second-order term** —
-  and for the DML score it takes the form of a *product* of the two separate errors (not a square of
-  one):
+For the partially linear model the DML score is "residual $\times$ residual" (step ⑤):
 
-  $$\big|\,\hat\theta - \theta_0\,\big| \;\lesssim\; \big\|\hat\ell - \ell_0\big\| \cdot \big\|\hat m - m_0\big\|$$
+$$\psi(W;\,\theta, \ell, m) = \big(\underbrace{Y - \ell(X)}_{\tilde Y} - \theta\,\underbrace{(T - m(X))}_{\tilde T}\big)\,\underbrace{(T - m(X))}_{\tilde T} = (\tilde Y - \theta\,\tilde T)\,\tilde T$$
 
-  A product of two small numbers is tiny: $10\% \times 10\% = 1\%$. Both models can be mediocre and
-  $\hat\theta$ stays accurate.
+It is the OLS condition again — *the residual of the residual-regression must be uncorrelated with
+$\tilde T$* — just with $X$ partialled out of both variables first. Solving $E[\psi] = 0$:
 
-- **Cross-fitting protects the product.** That bound only holds if $\hat\ell$ and $\hat m$ didn't
-  train on the row they're scoring; otherwise overfitting reintroduces a correlation. Out-of-fold
-  prediction (step ③) guarantees it.
+$$E\big[\tilde T(\tilde Y - \theta\,\tilde T)\big] = 0 \;\Longrightarrow\; \hat\theta = \frac{E[\tilde T\,\tilde Y]}{E[\tilde T^{\,2}]}.$$
 
-> **Key idea:** orthogonality makes nuisance error hit $\hat\theta$ as a *product*, not a sum, so
-> two imperfect ML models still yield a valid causal estimate.
+So the **score defines the estimator**. Everything now rides on one question: when we plug in the
+*estimated* $\hat\eta$ rather than the true $\eta_0$, how far does $\hat\theta$ move?
+
+### What this score buys you — the debiasing
+
+The whole reason we use *this* residual-on-residual score, and not a plainer one, is what it does to
+the nuisance error. In three lines:
+
+- **Why have it.** This score is shaped so that an error in $\hat\ell$ or $\hat m$ enters $\hat\theta$
+  only as a *product* of the two errors — never on its own. A product of two small numbers is
+  negligible ($10\% \times 10\% = 1\%$), so even mediocre ML models leave $\hat\theta$ accurate.
+- **What it achieves.** A small wobble in either nuisance barely moves $\hat\theta$: the
+  error-term that *would* have dominated is removed, and what survives is small enough to vanish as
+  fast as ordinary sampling noise. **That removal is the debiasing** — it is built into the score, not
+  subtracted by hand afterwards.
+- **If we skip it.** Use a plainer score (one ML model, or residualize only one side) and the nuisance
+  error enters $\hat\theta$ *directly*. The ML model's regularization shrinkage then leaks straight in,
+  pulls $\hat\theta$ toward zero, and no amount of data fixes it.
+
+### Cross-fitting protects this
+
+That guarantee assumes $\hat\ell, \hat m$ never saw the row they score. Train and predict on the same
+row and the model partly *memorizes* $Y_i$, quietly re-correlating the residuals — a second, distinct
+leak (overfitting) the score's shape doesn't cover. Out-of-fold prediction (step ③) closes it.
+
+> **Key idea:** debiasing *is* the score choice. The residual-on-residual form makes nuisance error
+> hit $\hat\theta$ as a *product*, not a sum, so two imperfect ML models still yield a valid causal
+> estimate; cross-fitting keeps that guarantee honest.
+
+---
+
+## DML for CATE: the R-learner
+
+Drop the constant-effect assumption and let the effect vary with $x$. The partially linear model
+becomes
+
+$$Y = \tau_0(X)\,T + g_0(X) + \varepsilon,$$
+
+and the goal is now the **CATE function** $\tau_0(x)$, not one scalar $\theta_0$. The identical
+partial-out algebra (take $E[\cdot \mid X]$, subtract) survives untouched, because $g_0(X)$ still
+cancels:
+
+$$\tilde Y = \tau_0(X)\,\tilde T + \varepsilon, \qquad \tilde Y = Y - \ell_0(X), \;\; \tilde T = T - m_0(X).$$
+
+- **The CATE score is conditional on $X$.** Since $\tau$ is now a function, the moment must hold at
+  each $x$, not just on average:
+
+  $$\psi(W;\,\tau, \ell, m) = \big(\tilde Y - \tau(X)\,\tilde T\big)\,\tilde T, \qquad E\big[\psi \mid X\big] = 0.$$
+
+- **Solving it is a weighted regression — the R-loss (Nie–Wager).** Integrating the conditional
+  moment is equivalent to minimising
+
+  $$\hat\tau = \arg\min_{\tau}\; E\Big[\big(\tilde Y - \tau(X)\,\tilde T\big)^2\Big],$$
+
+  a one-line *weighted* regression: pseudo-outcome $\tilde Y / \tilde T$, weights $\tilde T^2$,
+  fittable with any ML learner. This is the **R-learner** — the CATE sibling of scalar DML, and a
+  cousin of the [meta-learners](05_meta_learners.md), differing precisely in that it regresses on
+  *residualized* treatment.
+
+- **The same debiasing carries over to $\hat\tau$.** Because the R-loss is built from the *two*
+  residuals, a small error in $\hat\ell$ or $\hat m$ does not feed into $\hat\tau(x)$ directly — the
+  dominant error-term is removed here exactly as it was for the scalar $\hat\theta$. So the R-learner
+  inherits DML's guarantee: imperfect, cross-fitted nuisance models still yield a **debiased** CATE
+  estimate. Nothing about going from one number $\theta_0$ to a function $\tau_0(x)$ costs you that
+  protection.
+
+> **Key idea:** CATE is the same machine with the moment made *conditional on $X$* (equivalently,
+> minimise the $\tilde T^2$-weighted R-loss). It debiases for the same reason scalar DML does — the
+> residual-on-residual form keeps nuisance error from leaking into $\hat\tau$.
