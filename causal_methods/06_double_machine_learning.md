@@ -212,12 +212,25 @@ $$\tilde Y = \tau_0(X)\,\tilde T + \varepsilon, \qquad \tilde Y = Y - \ell_0(X),
 - **Solving it is a weighted regression — the R-loss (Nie–Wager).** Integrating the conditional
   moment is equivalent to minimising
 
-  $$\hat\tau = \arg\min_{\tau}\; E\Big[\big(\tilde Y - \tau(X)\,\tilde T\big)^2\Big],$$
+  $$\hat\tau = \arg\min_{\tau}\; E\Big[\big(\tilde Y - \tau(X)\,\tilde T\big)^2\Big].$$
 
-  a one-line *weighted* regression: pseudo-outcome $\tilde Y / \tilde T$, weights $\tilde T^2$,
-  fittable with any ML learner. This is the **R-learner** — the CATE sibling of scalar DML, and a
-  cousin of the [meta-learners](05_meta_learners.md), differing precisely in that it regresses on
-  *residualized* treatment.
+  This is not yet in the shape of a standard regression — $\tau(X)$ is multiplied by $\tilde T$, not
+  predicting a target directly. Pull $\tilde T^2$ out of the square to fix that:
+
+  $$\big(\tilde Y - \tau(X)\,\tilde T\big)^2 = \tilde T^{\,2}\Big(\frac{\tilde Y}{\tilde T} - \tau(X)\Big)^2.$$
+
+  Now it *is* an ordinary regression — fit $\tau(X)$ to a target, with a weight on each row:
+
+  - **Target (pseudo-outcome):** $\tilde Y / \tilde T$ — the per-unit effect implied by that single
+    row's residuals.
+  - **Weight:** $\tilde T^{\,2}$ — rows whose treatment was hard to predict from $X$ (large
+    $|\tilde T|$) carry the most causal information, so they count most; rows where $X$ already pinned
+    down $T$ ($\tilde T \approx 0$) are near-noise and are down-weighted.
+
+  So $\hat\tau$ is just a **weighted regression of $\tilde Y/\tilde T$ on $X$**, fittable with any ML
+  learner. This is the **R-learner** — the CATE sibling of scalar DML, and a cousin of the
+  [meta-learners](05_meta_learners.md), differing precisely in that it regresses on *residualized*
+  treatment.
 
 - **The same debiasing carries over to $\hat\tau$.** Because the R-loss is built from the *two*
   residuals, a small error in $\hat\ell$ or $\hat m$ does not feed into $\hat\tau(x)$ directly — the
