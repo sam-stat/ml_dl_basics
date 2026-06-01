@@ -93,6 +93,7 @@ Scale to *individual* effects (CATE) with flexible ML base learners.
 
 - **Idea.** Random forests re-purposed: splits chosen to **maximize the difference in treatment
   effect** between child nodes (hunting heterogeneity), with honest confidence intervals on $\tau(x)$.
+  Full detail in [08_causal_forests.md](08_causal_forests.md).
 - **Assumption.** Ignorability given $X$.
 - **Use when.** You want CATE estimates *with* uncertainty, or to discover which features drive effect
   heterogeneity.
