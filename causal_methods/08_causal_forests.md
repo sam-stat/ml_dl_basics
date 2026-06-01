@@ -149,42 +149,23 @@ How a node actually picks its split, and how the tree deepens.
 
 ![Honest tree — J₁ grows the branches, J₂ fills the leaves](diagrams/causal_forest_honesty.svg)
 
-- **The bias it fixes.** The winning split is the one with the **largest** $\hat\tau$ gap out of
-  hundreds tried — so part of that gap is real signal and part is just **noise** that broke favorably.
-  Reuse the same units to *report* the leaf effect and you quote the noise-inflated number: you searched
-  for the most extreme outcome, then called it typical. (Run 100 experiments, keep the biggest, report
-  *that* — it overstates the truth. Same trap.)
+- **The problem.** The winning split has the largest $\hat\tau$ gap of the hundreds tried, so it partly
+  captured **noise** — reusing those same units to report the leaf's effect quotes that inflated number.
 
-- **The halving happens once, at the root — not at every split.** The common misconception is that the
-  data is re-halved at every level ($5000 \to 2500 \to 1250 \to \dots$, which would empty out instantly).
-  It isn't. Before the tree grows, its subsample is cut **one time** into two disjoint sets:
-  - **Splitting set $J_1$** (e.g. 2500 of 5000) — used to draw *all* the boundaries.
-  - **Estimating set $J_2$** (the other 2500) — used to fill *all* the leaves.
+- **The fix (process).** Cut each tree's subsample **once, at the root** (not at every level) into two
+  disjoint sets:
+  - **$J_1$** grows the whole tree — picks every split — then is discarded.
+  - **$J_2$** is dropped down the frozen tree; its units fill the leaves and compute each $\hat\tau$.
 
-- **Step 1 — grow with $J_1$ only.** Set $J_2$ aside. Using $J_1$, maximize
-  $N_L\hat\tau_L^{\,2} + N_R\hat\tau_R^{\,2}$ at the root, recurse into each child, and keep going until
-  the stopping rule. The structure may **overfit $J_1$'s quirks** — e.g. a hyper-specific leaf for
-  *"low risk, opened the app 3×, borrowed \$100 last month"* that 8 lucky $J_1$ users made look extreme.
+- **Why it works (intuition).** $J_2$ never touched the boundaries, so its leaf effect is independent of
+  the structure: a real rule still shows up in $J_2$ (signal survives), while a leaf that only memorized
+  $J_1$'s noise regresses to baseline — $J_2$ is the reality check.
 
-- **Step 2 — fill leaves with $J_2$ only.** Freeze the branches, discard $J_1$, and drop $J_2$ down the
-  tree; each leaf's $\hat\tau$ is computed from the $J_2$ units that land in it.
-  - That overfit leaf now gets a **reality check**: maybe **zero** $J_2$ units land there, or the few
-    that do show an ordinary effect — not the inflated $J_1$ value.
+- **Cost.** Effective sample halves, and every leaf needs both treated and control $J_2$ units, so
+  causal forests are data-hungry.
 
-- **Why this is what saves deep trees.** $J_2$ had **zero** influence on where the boundaries went, so
-  any effect computed from $J_2$ is statistically independent of the tree's structure:
-  - a **genuine** rule (low-risk really do respond) → $J_2$ units in that leaf also show a high effect
-    → the signal survives;
-  - **memorized noise** → $J_2$ units regress back to baseline → the fluke is washed out.
-
-- **The trade-off: data hunger.** Honesty spends half the sample on structure and half on estimation, so
-  effective sample size **halves**. You need enough $J_2$ units — *both treated and control* — in every
-  deep leaf to run the regression, so causal forests need **more data** than plain RFs and shine on
-  large, rich datasets.
-
-> **Key idea:** the $J_1$/$J_2$ split is one-time and at the root — $J_1$ draws every boundary, $J_2$
-> fills every leaf. Because the leaf effect never saw the boundary search, deep trees can chase
-> fine-grained subgroups without inflating $\hat\tau(x)$ — at the cost of needing roughly twice the data.
+> **Key idea:** $J_1$ draws every boundary, $J_2$ fills every leaf. Because the leaf effect never saw
+> the split search, $\hat\tau(x)$ stays unbiased even for deep trees.
 
 ---
 
