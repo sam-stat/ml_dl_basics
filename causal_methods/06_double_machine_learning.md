@@ -126,31 +126,52 @@ The algebra says no — and it starts from the model for $Y$ itself.
 
 ## Why the error stays controlled: Neyman orthogonality
 
-DML stacks two imperfect ML models into a downstream regression — naively, their errors should
-compound and blow up $\hat\theta$. They don't, and the property that saves us has a name:
-**Neyman orthogonality**.
+The ML models $\hat\ell$ and $\hat m$ are never exact. The worry is that their errors leak straight
+into $\hat\theta$. **Neyman orthogonality** is the property that stops this — and note it is *not* an
+assumption about the data (like ignorability); it's a property we **engineer into the score** by
+choosing the residual-on-residual form.
 
-- **What orthogonality buys.** The DML score $\psi$ is built so that nuisance mistakes don't enter
-  $\hat\theta$ **linearly** — they enter only as a **product** $(\hat\ell - \ell_0)\cdot(\hat m - m_0)$.
+- **Orthogonality = the score is flat in the nuisance direction.** Think of the *expected* score
+  $E[\psi]$ as a function of the nuisances $\eta = (\ell, m)$, with $\theta$ held at its true value
+  $\theta_0$. The condition is that its **derivative with respect to $\eta$, evaluated at the true
+  nuisances $\eta_0$, vanishes**:
 
-- **Why the errors get controlled (the logical reason).** At the true $\theta_0$, the score is
-  *flat* in the direction of the nuisance functions: nudge $\hat\ell$ or $\hat m$ slightly and the
-  estimating equation for $\theta$ barely moves. A small nuisance error pushes you *sideways along
-  a flat ridge*, not down a slope — so it never tilts $\hat\theta$ to first order. The only error
-  that survives is the *second-order* leftover, the product of two small mistakes.
+  $$\partial_\eta\, E\big[\psi(W;\,\theta_0,\, \eta)\big]\big|_{\eta = \eta_0} = 0, \qquad \eta = (\ell, m)$$
 
-- **Why a product is so much smaller.** If each ML model is off by $\sim 10\%$, a method that
-  propagated error linearly would leave $\hat\theta$ off by $\sim 10\%$. The product is
-  $10\% \times 10\% = 1\%$ — an order of magnitude smaller. That's enough for $\hat\theta$ to keep
-  valid standard errors and confidence intervals even when both nuisance models are individually
-  mediocre. Two slow ML models compose into one fast, trustworthy causal estimate.
+  - This is a derivative *in the function direction*: it asks how $E[\psi]$ responds when you perturb
+    the whole function $\ell$ (or $m$) slightly away from the truth $\ell_0$ (or $m_0$) — a
+    directional (Gâteaux) derivative, not an ordinary $\partial/\partial x$.
+  - Its being zero means $E[\psi]$ sits at a **flat spot** in the nuisance direction at $\eta_0$. So
+    nudging $\hat\ell$ or $\hat m$ slightly off the truth barely moves $\theta$'s estimating equation —
+    a single nuisance error can't tilt $\hat\theta$.
 
-- **Cross-fitting is the operational half.** The product bound only holds if $\hat\ell$ and
-  $\hat m$ are independent of the rows they score. Train and predict on the same data and
-  overfitting sneaks in a correlation that breaks the bound; out-of-fold prediction (step ③)
-  restores the independence the argument needs.
+- **Why the first derivative is the thing that matters — Taylor's view.** Let $\delta = \hat\eta -
+  \eta_0$ be the nuisance error (small, since the ML models are decent). The bias in $\hat\theta$ is a
+  function of $\delta$, and a Taylor expansion around the truth $\delta = 0$ reads:
 
-> **Key idea:** orthogonality flattens the score so nuisance error hits $\hat\theta$ as a *product*,
-> not a sum; cross-fitting keeps that product honest. Together they let "good but not great" ML
-> drive valid causal inference — that's what makes DML noble rather than a pile of stacked
-> regressions.
+  $$\text{bias}(\delta) \;=\; \underbrace{\text{bias}(0)}_{=\,0} \;+\; \underbrace{b'\,\delta}_{\text{first order}} \;+\; \underbrace{\tfrac{1}{2}\,b''\,\delta^2}_{\text{second order}} \;+\; \cdots$$
+
+  - $\text{bias}(0) = 0$: plug in the *true* nuisances and the score gives the right answer.
+  - The **first-order term $b'\delta$** is *linear* in the error. Because $\delta$ is small,
+    $\delta \gg \delta^2$, so this term **dominates** — whatever rate $b'\delta$ shrinks at is the rate
+    the whole bias shrinks at. Its coefficient $b'$ is exactly the derivative $\partial_\eta E[\psi]$
+    from above.
+  - **That is why we care about the first derivative:** it is the coefficient of the dominant term.
+    Orthogonality *sets $b' = 0$*, deleting the entire linear term and promoting the much smaller
+    second-order term to be the leader.
+
+- **What's left is only a product.** With $b' = 0$, the leading survivor is the **second-order term** —
+  and for the DML score it takes the form of a *product* of the two separate errors (not a square of
+  one):
+
+  $$\big|\,\hat\theta - \theta_0\,\big| \;\lesssim\; \big\|\hat\ell - \ell_0\big\| \cdot \big\|\hat m - m_0\big\|$$
+
+  A product of two small numbers is tiny: $10\% \times 10\% = 1\%$. Both models can be mediocre and
+  $\hat\theta$ stays accurate.
+
+- **Cross-fitting protects the product.** That bound only holds if $\hat\ell$ and $\hat m$ didn't
+  train on the row they're scoring; otherwise overfitting reintroduces a correlation. Out-of-fold
+  prediction (step ③) guarantees it.
+
+> **Key idea:** orthogonality makes nuisance error hit $\hat\theta$ as a *product*, not a sum, so
+> two imperfect ML models still yield a valid causal estimate.
