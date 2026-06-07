@@ -414,52 +414,14 @@ body {
 <button id="menu-btn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
 
 <!-- ════ SIDEBAR ════ -->
+<!-- The brand is static; the section groups are injected from notes.json
+     by buildSidebar(). Nothing here is hardcoded per-note any more. -->
 <nav class="sidebar" id="sidebar">
-
   <div class="sidebar-brand" onclick="navigate('')">
     <h1>ML / DL Study Notes</h1>
     <p>Sam's reference guide</p>
   </div>
-
-  <!-- Each .nav-group is a subject area — add more here as you expand the PDF -->
-  <div class="nav-group open" id="grp-nn">
-    <div class="nav-group-header" onclick="toggleGroup('grp-nn')">
-      <span class="nav-group-title">Neural Networks</span>
-      <span class="nav-group-chevron">▶</span>
-    </div>
-    <div class="nav-group-body">
-      <div class="nav-item" data-file="neural_networks/01_basic_neural_networks.md" onclick="navigate('neural_networks/01_basic_neural_networks.md')">
-        <i class="nav-icon">01</i> Basic Neural Networks
-      </div>
-      <div class="nav-item" data-file="neural_networks/02_training_issues.md" onclick="navigate('neural_networks/02_training_issues.md')">
-        <i class="nav-icon">02</i> Training Issues
-      </div>
-      <div class="nav-item" data-file="neural_networks/03_word_embeddings.md" onclick="navigate('neural_networks/03_word_embeddings.md')">
-        <i class="nav-icon">03</i> Word Embeddings
-      </div>
-      <div class="nav-item" data-file="neural_networks/04_rnns_lstms.md" onclick="navigate('neural_networks/04_rnns_lstms.md')">
-        <i class="nav-icon">04</i> RNNs &amp; LSTMs
-      </div>
-      <div class="nav-item" data-file="neural_networks/05_cnns.md" onclick="navigate('neural_networks/05_cnns.md')">
-        <i class="nav-icon">05</i> CNNs
-      </div>
-      <div class="nav-item" data-file="neural_networks/06_transformers.md" onclick="navigate('neural_networks/06_transformers.md')">
-        <i class="nav-icon">06</i> Transformers
-      </div>
-      <div class="nav-item" data-file="neural_networks/07_architecture_guide.md" onclick="navigate('neural_networks/07_architecture_guide.md')">
-        <i class="nav-icon">07</i> Architecture Guide
-      </div>
-      <div class="nav-item" data-file="neural_networks/08_agents_llms.md" onclick="navigate('neural_networks/08_agents_llms.md')">
-        <i class="nav-icon">08</i> Agents &amp; LLMs
-      </div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────
-       ADD FUTURE SECTIONS HERE by copy-pasting a
-       new .nav-group block above this comment.
-  ─────────────────────────────────────────────── -->
-
+  <div id="nav-groups"></div>
 </nav>
 
 <!-- ════ MAIN ════ -->
@@ -474,31 +436,39 @@ body {
 
 <script>
 /* ════════════════════════════════════════
-   Site data — extend this to add new sections
+   Site data — loaded at runtime from notes.json,
+   which scripts/build_manifest.py generates by scanning
+   the note folders. Add a make-notes folder, regenerate
+   (or let the GitHub Action do it), and it appears here —
+   no edits to this file required.
 ════════════════════════════════════════ */
-const SECTIONS = [
-  {
-    id: 'neural_networks',
-    title: 'Neural Networks',
-    desc: 'From perceptrons to agents — with diagrams and maths.',
-    topics: [
-      { file: 'neural_networks/01_basic_neural_networks.md', tag: '01', title: 'Basic Neural Networks',      desc: 'Perceptron, activation functions, feedforward networks, backpropagation.' },
-      { file: 'neural_networks/02_training_issues.md',        tag: '02', title: 'Training Issues & Solutions', desc: 'Vanishing gradients, overfitting, batch normalisation, dropout, optimisers.' },
-      { file: 'neural_networks/03_word_embeddings.md',        tag: '03', title: 'Word Embeddings',            desc: 'Word2Vec, GloVe, CBOW, Skip-gram, and distributed representations.' },
-      { file: 'neural_networks/04_rnns_lstms.md',             tag: '04', title: 'RNNs & LSTMs',              desc: 'Recurrent networks, LSTM gates, vanishing gradients in sequences.' },
-      { file: 'neural_networks/05_cnns.md',                   tag: '05', title: 'Convolutional Networks',    desc: 'Convolution, pooling, receptive fields, and standard CNN architectures.' },
-      { file: 'neural_networks/06_transformers.md',           tag: '06', title: 'Transformers & Attention',  desc: 'Self-attention, multi-head attention, positional encoding, encoder–decoder.' },
-      { file: 'neural_networks/07_architecture_guide.md',     tag: '07', title: 'Architecture Guide',        desc: 'Choosing the right architecture — a decision framework.' },
-      { file: 'neural_networks/08_agents_llms.md',            tag: '08', title: 'Agents & LLMs',             desc: 'Large language models, RAG, tool use, agentic systems, prompting.' },
-    ]
-  }
-  /* Add future sections here:
-  ,{
-    id: 'ml_basics',
-    title: 'ML Basics',
-    topics: [ ... ]
-  } */
-];
+let SECTIONS = [];
+
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+async function loadManifest() {
+  const res = await fetch('notes.json', { cache: 'no-cache' });
+  if (!res.ok) throw new Error('notes.json HTTP ' + res.status);
+  SECTIONS = (await res.json()).sections || [];
+}
+
+/* Build the sidebar groups from the manifest (first group open). */
+function buildSidebar() {
+  document.getElementById('nav-groups').innerHTML = SECTIONS.map((sec, i) => `
+    <div class="nav-group${i === 0 ? ' open' : ''}" id="grp-${esc(sec.id)}">
+      <div class="nav-group-header" onclick="toggleGroup('grp-${esc(sec.id)}')">
+        <span class="nav-group-title">${esc(sec.title)}</span>
+        <span class="nav-group-chevron">▶</span>
+      </div>
+      <div class="nav-group-body">
+        ${sec.topics.map(t => `
+          <div class="nav-item" data-file="${esc(t.file)}" onclick="navigate('${esc(t.file)}')">
+            <i class="nav-icon">›</i> ${esc(t.title)}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
 
 /* ════════════════════════════════════════
    Markdown → HTML pipeline
@@ -571,13 +541,12 @@ function showHome() {
 
   const sectionsHtml = SECTIONS.map(sec => `
     <div class="section-row">
-      <div class="section-row-label">${sec.title}</div>
+      <div class="section-row-label">${esc(sec.title)}</div>
       <div class="card-grid">
         ${sec.topics.map(t => `
-          <div class="topic-card" onclick="navigate('${t.file}')">
-            <div class="card-tag">${t.tag}</div>
-            <div class="card-title">${t.title}</div>
-            <div class="card-desc">${t.desc}</div>
+          <div class="topic-card" onclick="navigate('${esc(t.file)}')">
+            <div class="card-title">${esc(t.title)}</div>
+            <div class="card-desc">${esc(t.desc || '')}</div>
           </div>`).join('')}
       </div>
     </div>`).join('');
@@ -666,9 +635,24 @@ function closeSidebarMobile() {
 }
 
 /* ════════════════════════════════════════
-   Init
+   Init — load the manifest, build the nav, then route
 ════════════════════════════════════════ */
-handleRoute();
+(async function init() {
+  try {
+    await loadManifest();
+    buildSidebar();
+  } catch (err) {
+    document.getElementById('article').innerHTML = `
+      <div style="text-align:center;padding:80px 0;color:#6b7280">
+        <p style="font-size:2rem;margin-bottom:12px">⚠️</p>
+        <p>Could not load the notes manifest (<code>notes.json</code>).</p>
+        <p style="font-size:0.83rem;margin-top:8px;color:#9ca3af">${esc(err.message)}</p>
+        <p style="font-size:0.83rem;margin-top:8px;color:#9ca3af">Run <code>python3 scripts/build_manifest.py</code> and serve from the repo root.</p>
+      </div>`;
+    return;
+  }
+  handleRoute();
+})();
 </script>
 
 </body>

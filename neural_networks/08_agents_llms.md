@@ -1,10 +1,10 @@
-# 8. Agents & LLMs
+# Agents & LLMs
 
 ---
 
 ## Large Language Models (LLMs)
 
-A **Large Language Model** is a Transformer decoder trained on massive text corpora to predict the next token. The same architecture as Section 6, but scaled to billions of parameters.
+A **Large Language Model** is a Transformer decoder trained on massive text corpora to predict the next token. The same architecture as [Transformers & Attention](06_transformers.md), but scaled to billions of parameters.
 
 ### Training
 

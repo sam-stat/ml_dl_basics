@@ -1,4 +1,4 @@
-# 4. RNNs & LSTMs
+# RNNs & LSTMs
 
 ---
 

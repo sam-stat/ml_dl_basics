@@ -1,4 +1,6 @@
-# 2. Training Issues & Solutions
+# Training Issues & Solutions
+
+Deep networks are powerful but notoriously hard to train: gradients can vanish or explode as they pass through many layers, models can memorise instead of generalise, and optimisation can stall in poor regions. This section catalogues the common failure modes and the standard fix for each.
 
 ---
 

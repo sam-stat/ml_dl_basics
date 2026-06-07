@@ -1,4 +1,4 @@
-# 6. Transformers & Attention
+# Transformers & Attention
 
 ---
 
@@ -95,8 +95,8 @@ The **residual connection** ensures gradients can flow back without vanishing, a
 
 ### Stacking $N$ Blocks
 
-BERT-base: $N = 12$, $d_{\text{model}} = 768$, $h = 12$
-GPT-2 large: $N = 36$, $d_{\text{model}} = 1280$
+- **BERT-base:** $N = 12$, $d_{\text{model}} = 768$, $h = 12$
+- **GPT-2 large:** $N = 36$, $d_{\text{model}} = 1280$
 
 ---
 

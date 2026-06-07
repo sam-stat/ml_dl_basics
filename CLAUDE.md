@@ -13,32 +13,29 @@ A **study-notes repository**, not a software project. The deliverables are GitHu
 
 ## Repository layout
 
-- `neural_networks/` — the flagship topic folder. Numbered section files (`01_*.md` … `08_*.md`), a `README.md` index, and `diagrams/`.
-- `causal_methods/` — raw source material (chat exports + PDF), *not* yet converted into the structured note format and *not* wired into the site.
+- `neural_networks/` — the flagship topic folder. Prefixed section files (`01_*.md` … `08_*.md`) for ordering, a `README.md` index, and `diagrams/`.
+- `causal_methods/` — a second topic folder in the same structured note format (`01_*.md` … `08_*.md` + `diagrams/`), wired into the site via the manifest. `helper_docs/` holds raw chat exports (mining material, not published notes).
 - `index.html` — the GitHub Pages SPA. `.nojekyll` is present so Pages serves the underscore-named folders and raw files untouched.
+- `notes.json` — **generated** manifest the SPA reads (do not hand-edit). `scripts/build_manifest.py` builds it; a GitHub Action regenerates it on push to `main`.
 
 ## Authoring notes — `/make-notes`
 
 `neural_networks/make-notes.md` is the **authoritative spec** for creating a new topic folder (the `/make-notes <topic>` workflow). Read it before writing or editing notes. It is the source of truth for folder structure, markdown rules, content-quality rules, and the SVG conventions below. Key points not to rediscover:
 
-- Section files are prefixed `01_`, `02_` for ordering, but headers **inside** files carry no numbering.
+- Section files are prefixed `01_`, `02_` for ordering, but content carries **no numbering** — the `# H1` is the plain title (no `# 3.` prefix), and no `## 1.1`-style subheadings.
 - Math is GitHub-native LaTeX (`$...$` inline, `$$...$$` block).
 - Notation is consistent across all notes — the canonical symbol table lives in `neural_networks/README.md` and `make-notes.md` (e.g. $W^{(\ell)}$, $a^{(\ell)}$, $z^{(\ell)}$, $\nabla_W\mathcal{L}$).
 - Every section opens with a plain-English motivation before any math.
 
 ## Diagrams
 
-Each diagram exists as three files in `diagrams/`: `<name>.tex` (TikZ source), `<name>.pdf`, and `<name>.svg`. **Markdown references the `.svg`** (`![Desc](diagrams/name.svg)`). There is no committed build script — the `.tex`→`.svg`/`.pdf` conversion is done externally, and SVGs are hand-tuned to the spec in `make-notes.md` (fixed color scheme; sub/superscripts as inline `<tspan dy=...>` offsets, never separate `<text>` elements; serif font).
+Diagrams are **hand-authored SVG** in a clean `<rect>`/`<line>`/`<text>` form, `.svg` only — the old TikZ `.tex`→`pdf2svg` pipeline has been retired (its text became un-restylable glyph paths). Spec in `make-notes.md`: fixed colour scheme; serif font; sub/superscripts as inline `<tspan baseline-shift="sub|super">` (not Unicode glyphs, which serif fonts don't shrink); and the "Style A" hand-drawn finish — one `feTurbulence`+`feDisplacementMap` roughen filter (house setting `scale="1.4"`) applied to shapes only, text stays crisp. Preview an SVG locally with `qlmanage -t -s 1100 -o /tmp <file>.svg` (it square-crops wide diagrams — crop the `viewBox` to inspect a right edge).
 
 ## The website (`index.html`)
 
-A dependency-free SPA: it `fetch()`es the markdown at runtime, renders with `marked`, protects/restores `$...$` around MathJax typesetting, and rewrites relative image/link paths. Because paths are relative, it must be served from the repo root.
+A dependency-free SPA: it loads `notes.json`, builds the sidebar + home cards from it, then `fetch()`es each markdown file at runtime, renders with `marked`, protects/restores `$...$` around MathJax typesetting, and rewrites relative image/link paths. Because paths are relative, it must be served from the repo root.
 
-**Critical gotcha when adding or renaming a note file:** the navigation is hardcoded in *two* places inside `index.html` and both must be updated to match:
-1. The sidebar `nav-item` `<div>`s (around line 431) — `data-file` + `onclick="navigate(...)"`.
-2. The JS group/card data structure (around line 481) — `{ file, tag, title, desc }` per note.
-
-A note added to a folder but not registered in both places will exist on GitHub but be invisible/unreachable on the site.
+**The navigation is data-driven — never hand-edit `index.html` to add a note.** Adding a folder of `NN_*.md` files and regenerating `notes.json` (via `scripts/build_manifest.py`, or automatically by the GitHub Action on push to `main`) is all it takes for a note to appear in both the sidebar and the home grid. Per-note title comes from the `# H1`; the card blurb is the first prose paragraph; group order is the priority list in the generator, then alphabetical.
 
 ## Workflow
 

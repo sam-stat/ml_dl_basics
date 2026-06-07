@@ -23,7 +23,9 @@ Create a self-contained folder `<topic_slug>/` containing:
     ...
 ```
 
-File names use `snake_case`. Section files are prefixed `01_`, `02_` etc for ordering but the markdown headers inside contain **no numbering** — just the plain title.
+File names use `snake_case`. Section files are prefixed `01_`, `02_` etc — the prefix is **only** for ordering (it drives both file order and the website). The markdown content carries **no numbering**: the `# H1` is the plain title (`# Word Embeddings`, never `# 3. Word Embeddings`), and no `## 1.1`-style numbered subheadings.
+
+> **The website updates itself.** The site (`index.html`) is driven by a generated manifest (`notes.json`), built by `scripts/build_manifest.py` scanning the note folders. A new folder of `NN_*.md` files appears automatically — **never hand-edit `index.html`**. Regenerate locally with `python3 scripts/build_manifest.py`; on push to `main` a GitHub Action regenerates it for you.
 
 ---
 
@@ -77,22 +79,21 @@ Use blockquotes for key insights:
 
 Every SVG must:
 
-1. **Use proper mathematical notation** — ALL sub/superscripts must be inline `<tspan>` offsets within the parent `<text>` element. **Never use separate `<text>` elements** for subscripts or superscripts; manually-placed coordinates misalign due to font rendering variance.
+1. **Use proper mathematical notation** — ALL sub/superscripts must be inline `<tspan>`s within the parent `<text>` element. **Never use separate `<text>` elements** for them, and **never rely on Unicode sub/superscript glyphs** (`₁ ⁽¹⁾`) — serif fonts render those at full height. Use `baseline-shift` with a smaller `font-size`; it positions correctly and auto-resets at the end of the tspan (no manual reset needed):
 
-   **Subscript pattern** (shift down, then reset):
+   **Subscript:**
    ```xml
-   W<tspan dy="5" font-size="9">ij</tspan><tspan dy="-5" font-size="12"> continues here</tspan>
+   W<tspan baseline-shift="sub" font-size="8">ij</tspan> continues here
    ```
 
-   **Superscript pattern** (shift up, then reset):
+   **Superscript:**
    ```xml
-   z<tspan dy="-6" font-size="9">(ℓ)</tspan><tspan dy="6" font-size="12"> continues here</tspan>
+   z<tspan baseline-shift="super" font-size="9">(ℓ)</tspan> continues here
    ```
 
-   - Use **absolute pixel offsets** (not `em`): `dy="5"` for subscripts, `dy="-6"` for superscripts
-   - Shifted glyph size: `font-size="9"` (use `8` for very small); always reset to parent size after
-   - Multi-character scripts go in one tspan: `<tspan dy="5" font-size="9">t−1</tspan>`
-   - Math symbols — use Unicode directly in text content: `∂ ∑ ∈ ℝ ⊙ ⊕ σ μ ε γ β ∇ ≈ → ×`
+   - Shifted glyph size: `font-size="8"`–`9"` (parent text usually `11`–`13`)
+   - Multi-character scripts go in one tspan: `<tspan baseline-shift="sub" font-size="8">t−1</tspan>`
+   - Math symbols — use Unicode directly in text content: `∂ ∑ ∈ ℝ ⊙ ⊕ σ μ ε γ β ∇ ≈ → × ̃` (combining tilde for c̃)
 
 2. **Use serif font** — `font-family="Georgia, 'Times New Roman', serif"` — for mathematical feel
 
@@ -114,6 +115,19 @@ Every SVG must:
 
 8. Reference diagrams in markdown as: `![Description](diagrams/filename.svg)`
 
+9. **Hand-drawn finish ("Style A").** Diagrams should look lightly hand-inked while staying crisp. Add one roughen filter and apply it to the *shapes only* (rectangles, lines, paths, circles) — never to `<text>`, so labels stay sharp and legible:
+
+   ```xml
+   <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+     <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+     <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+   </filter>
+   ```
+
+   Wrap the shapes in `<g filter="url(#rough)"> … </g>` and keep all `<text>` outside that group. Keep the serif font and the colour scheme above — the wobble alone gives the hand-drawn feel, needs no external fonts, and renders identically on GitHub, in the SPA, and standalone. **`scale="1.4"` is the house setting** — gentle waver, boxes stay clean; higher (2+) makes rectangle edges look jittery and can break thin strokes. `baseFrequency` lower = longer, gentler waves.
+
+   Author diagrams **by hand** in this clean `<rect>`/`<line>`/`<text>` form — not as TikZ/`pdf2svg` output, whose text becomes vector glyph paths that can't be restyled or roughened cleanly.
+
 ---
 
 ## README.md Structure
@@ -125,9 +139,9 @@ Every SVG must:
 
 ## Contents
 
-| # | Topic | File |
-|---|-------|------|
-| 1 | Section name | [file.md](file.md) |
+| Topic | File |
+|-------|------|
+| Section name | [file.md](file.md) |
 ...
 
 ## Notation
@@ -136,6 +150,8 @@ Every SVG must:
 |--------|---------|
 ...
 ```
+
+The Contents table carries **no leading number column** — order comes from the file prefixes, not from visible numbering.
 
 ---
 
@@ -158,3 +174,4 @@ Every SVG must:
 4. Write README.md
 5. Write each section file in order
 6. Verify all diagram references resolve
+7. Run `python3 scripts/build_manifest.py` to register the new folder on the website (or just push to `main` — the GitHub Action does it). **Do not edit `index.html`.**

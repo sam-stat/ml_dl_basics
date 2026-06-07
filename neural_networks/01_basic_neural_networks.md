@@ -1,4 +1,4 @@
-# 1. Basic Neural Network Design
+# Basic Neural Network Design
 
 ---
 
@@ -56,7 +56,9 @@ $$z^{(\ell)} = W^{(\ell)}\, a^{(\ell-1)} + b^{(\ell)}, \qquad a^{(\ell)} = \sigm
 
 The final layer output $a^{(L)} = \hat{y}$.
 
-**Why no activation on the final layer?** For regression we use the raw linear output; for classification we apply softmax. The activation choice depends on the task.
+**Why no activation on the final layer?** The activation choice depends on the task:
+- **Regression** — use the raw linear output
+- **Classification** — apply softmax
 
 ---
 

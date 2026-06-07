@@ -1,8 +1,10 @@
-# 7. Architecture Guide — Which Network for Which Problem?
+# Architecture Guide — Which Network for Which Problem?
 
 ---
 
 ## Overview
+
+Picking an architecture is mostly about matching the **structure of your data** to the inductive bias of the model: grids of pixels favour convolution, ordered sequences favour recurrence or attention, and tabular features often need no deep net at all. This guide maps common problem types to the architecture that fits.
 
 ![Architecture Selection Guide](diagrams/architecture_guide.svg)
 
@@ -33,7 +35,9 @@ Input (H×W×3) → [Conv+BN+ReLU] × N → MaxPool × K → Flatten → FC → 
 ### Object Detection
 **Architecture:** CNN backbone + detection head (YOLO, Faster R-CNN, SSD)
 
-**Why:** Need to localise **and** classify objects simultaneously. CNN backbone extracts multi-scale feature maps; detection head predicts bounding boxes and class labels at each scale.
+**Why:** Need to localise **and** classify objects simultaneously.
+- CNN backbone extracts multi-scale feature maps
+- Detection head predicts bounding boxes and class labels at each scale
 
 ---
 
@@ -46,7 +50,10 @@ Input (H×W×3) → [Conv+BN+ReLU] × N → MaxPool × K → Flatten → FC → 
 - Pre-trained on billions of words — general language understanding out of the box
 - Fine-tuning on even small datasets ($\sim$1k examples) usually outperforms training from scratch
 
-**When to use CNN/LSTM:** Low latency inference (embedded systems), very small training data where full fine-tuning over-fits, multilingual settings without a multilingual BERT.
+**When to use CNN/LSTM:**
+- Low latency inference (embedded systems)
+- Very small training data, where full fine-tuning over-fits
+- Multilingual settings without a multilingual BERT
 
 **Setup:**
 ```

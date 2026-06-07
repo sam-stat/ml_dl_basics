@@ -1,4 +1,4 @@
-# 3. Word Embeddings
+# Word Embeddings
 
 ---
 
@@ -47,15 +47,15 @@ Two tasks (Word2Vec, Mikolov et al. 2013):
 
 ![CBOW Architecture](diagrams/cbow_architecture.svg)
 
-### Step 1 — Lookup embeddings for context words
+### Lookup embeddings for context words
 
 Each word $w_i$ has an **input embedding** $v_{w_i} \in \mathbb{R}^d$ (row of the embedding matrix $V_{\text{in}} \in \mathbb{R}^{|V| \times d}$).
 
-### Step 2 — Average the context embeddings
+### Average the context embeddings
 
 $$h = \frac{1}{n}\sum_{i=1}^{n} v_{w_i} \quad \in \mathbb{R}^d$$
 
-### Step 3 — Predict the center word via softmax
+### Predict the center word via softmax
 
 Each word also has an **output embedding** $u_{w} \in \mathbb{R}^d$ (row of a separate matrix $V_{\text{out}}$):
 
@@ -117,7 +117,7 @@ Static embeddings (Word2Vec, GloVe) assign each word a single fixed vector regar
 
 **ELMo** (Embeddings from Language Models) produces **context-dependent** representations using a bidirectional LSTM trained as a language model. The embedding of word $w_t$ depends on the full sentence.
 
-**BERT** uses a Transformer encoder with masked language modelling — see Section 6.
+**BERT** uses a Transformer encoder with masked language modelling — see [Transformers & Attention](06_transformers.md).
 
 | Method | Context-aware | Architecture | Pretrained on |
 |--------|--------------|-------------|---------------|

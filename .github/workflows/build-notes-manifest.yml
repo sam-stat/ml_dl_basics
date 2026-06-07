@@ -1,0 +1,49 @@
+name: Build notes manifest
+
+# Regenerates notes.json (the manifest the website reads) whenever notes change
+# on main, so a freshly-added make-notes folder shows up on the site with no
+# manual edits. GitHub Pages serves from main, so the bot commit triggers a redeploy.
+
+on:
+  push:
+    branches: [main]
+    # Only react to content/generator changes. A commit that touches only
+    # notes.json (i.e. the bot's own commit below) does NOT match, so there is
+    # no trigger loop.
+    paths:
+      - '**.md'
+      - 'scripts/build_manifest.py'
+      - '.github/workflows/build-notes-manifest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: notes-manifest-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Regenerate notes.json
+        run: python3 scripts/build_manifest.py
+
+      - name: Commit if changed
+        run: |
+          if [[ -n "$(git status --porcelain notes.json)" ]]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add notes.json
+            git commit -m "chore: regenerate notes.json [skip ci]"
+            git push
+          else
+            echo "notes.json already up to date — nothing to commit."
+          fi
