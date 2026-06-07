@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" width="880" height="460" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="mlarr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#777"/>
+    </marker>
+  </defs>
+  <rect width="880" height="460" fill="#ffffff"/>
+  <text x="440" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#222">Meta-learners — three ways to wrap ML for CATE</text>
+
+  <!-- dividers -->
+  <line x1="293" y1="50" x2="293" y2="380" stroke="#e3e3e3" stroke-width="1"/>
+  <line x1="587" y1="50" x2="587" y2="380" stroke="#e3e3e3" stroke-width="1"/>
+
+  <!-- ===== S-learner ===== -->
+  <text x="146" y="68" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">S-learner</text>
+  <text x="146" y="86" text-anchor="middle" font-size="11" fill="#888">one model, T as a feature</text>
+
+  <rect x="76" y="100" width="140" height="34" rx="5" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+  <text x="146" y="122" text-anchor="middle" font-size="12" fill="#2c5f93">features x  and  T</text>
+  <path d="M146,134 L146,158" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="76" y="160" width="140" height="34" rx="5" fill="#edfaed" stroke="#5cb85c" stroke-width="1.5"/>
+  <text x="146" y="182" text-anchor="middle" font-size="13" fill="#3a8a3a">model  μ(x, t)</text>
+  <path d="M146,194 L146,218" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="62" y="220" width="78" height="30" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.3"/>
+  <text x="101" y="240" text-anchor="middle" font-size="12" fill="#9a6b1e">μ(x, 1)</text>
+  <rect x="152" y="220" width="78" height="30" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.3"/>
+  <text x="191" y="240" text-anchor="middle" font-size="12" fill="#9a6b1e">μ(x, 0)</text>
+  <path d="M146,250 L146,274" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="56" y="276" width="180" height="34" rx="5" fill="#fdeaea" stroke="#d9534f" stroke-width="1.6"/>
+  <text x="146" y="298" text-anchor="middle" font-size="12" fill="#a83a36">τ̂(x) = μ(x,1) − μ(x,0)</text>
+
+  <!-- ===== T-learner ===== -->
+  <text x="440" y="68" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">T-learner</text>
+  <text x="440" y="86" text-anchor="middle" font-size="11" fill="#888">two independent models</text>
+
+  <rect x="320" y="100" width="105" height="34" rx="5" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+  <text x="372" y="122" text-anchor="middle" font-size="11" fill="#2c5f93">control data</text>
+  <rect x="455" y="100" width="105" height="34" rx="5" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+  <text x="507" y="122" text-anchor="middle" font-size="11" fill="#2c5f93">treated data</text>
+
+  <path d="M372,134 L372,158" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+  <path d="M507,134 L507,158" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="332" y="160" width="80" height="34" rx="5" fill="#edfaed" stroke="#5cb85c" stroke-width="1.5"/>
+  <text x="372" y="182" text-anchor="middle" font-size="13" fill="#3a8a3a">μ<tspan dy="5" font-size="9">0</tspan></text>
+  <rect x="467" y="160" width="80" height="34" rx="5" fill="#edfaed" stroke="#5cb85c" stroke-width="1.5"/>
+  <text x="507" y="182" text-anchor="middle" font-size="13" fill="#3a8a3a">μ<tspan dy="5" font-size="9">1</tspan></text>
+
+  <path d="M372,194 L420,232" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+  <path d="M507,194 L459,232" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="350" y="234" width="180" height="34" rx="5" fill="#fdeaea" stroke="#d9534f" stroke-width="1.6"/>
+  <text x="440" y="256" text-anchor="middle" font-size="12" fill="#a83a36">τ̂(x) = μ<tspan dy="5" font-size="9">1</tspan><tspan dy="-5" font-size="12">(x) − μ</tspan><tspan dy="5" font-size="9">0</tspan><tspan dy="-5" font-size="12">(x)</tspan></text>
+
+  <!-- ===== X-learner ===== -->
+  <text x="734" y="68" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">X-learner</text>
+  <text x="734" y="86" text-anchor="middle" font-size="11" fill="#888">cross-impute, then re-fit</text>
+
+  <rect x="640" y="100" width="188" height="30" rx="5" fill="#edfaed" stroke="#5cb85c" stroke-width="1.4"/>
+  <text x="734" y="120" text-anchor="middle" font-size="11" fill="#3a8a3a">base μ<tspan dy="5" font-size="8">0</tspan><tspan dy="-5" font-size="11">, μ</tspan><tspan dy="5" font-size="8">1</tspan><tspan dy="-5" font-size="11"> (T-stage)</tspan></text>
+  <path d="M734,130 L734,150" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="636" y="152" width="92" height="36" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.3"/>
+  <text x="682" y="170" text-anchor="middle" font-size="10" fill="#9a6b1e">D<tspan dy="4" font-size="8">1</tspan><tspan dy="-4" font-size="10"> = Y − μ</tspan><tspan dy="4" font-size="8">0</tspan></text>
+  <text x="682" y="183" text-anchor="middle" font-size="9" fill="#9a6b1e">(treated)</text>
+  <rect x="740" y="152" width="92" height="36" rx="5" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.3"/>
+  <text x="786" y="170" text-anchor="middle" font-size="10" fill="#9a6b1e">D<tspan dy="4" font-size="8">0</tspan><tspan dy="-4" font-size="10"> = μ</tspan><tspan dy="4" font-size="8">1</tspan><tspan dy="-4" font-size="10"> − Y</tspan></text>
+  <text x="786" y="183" text-anchor="middle" font-size="9" fill="#9a6b1e">(control)</text>
+
+  <path d="M682,188 L682,210" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+  <path d="M786,188 L786,210" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="648" y="212" width="68" height="30" rx="5" fill="#edfaed" stroke="#5cb85c" stroke-width="1.4"/>
+  <text x="682" y="232" text-anchor="middle" font-size="12" fill="#3a8a3a">τ<tspan dy="5" font-size="9">1</tspan></text>
+  <rect x="752" y="212" width="68" height="30" rx="5" fill="#edfaed" stroke="#5cb85c" stroke-width="1.4"/>
+  <text x="786" y="232" text-anchor="middle" font-size="12" fill="#3a8a3a">τ<tspan dy="5" font-size="9">0</tspan></text>
+
+  <path d="M682,242 L724,272" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+  <path d="M786,242 L744,272" stroke="#777" stroke-width="1.3" marker-end="url(#mlarr)"/>
+
+  <rect x="636" y="274" width="196" height="36" rx="5" fill="#fdeaea" stroke="#d9534f" stroke-width="1.6"/>
+  <text x="734" y="290" text-anchor="middle" font-size="11" fill="#a83a36">τ̂(x) = e(x)·τ<tspan dy="4" font-size="8">0</tspan></text>
+  <text x="734" y="304" text-anchor="middle" font-size="11" fill="#a83a36">+ (1 − e(x))·τ<tspan dy="4" font-size="8">1</tspan></text>
+
+  <!-- footer formula -->
+  <line x1="60" y1="350" x2="820" y2="350" stroke="#eee" stroke-width="1"/>
+  <text x="440" y="380" text-anchor="middle" font-size="13" fill="#333">all three wrap standard base learners to estimate  τ(x) = E[ Y(1) − Y(0) | X = x ]</text>
+  <text x="440" y="404" text-anchor="middle" font-size="11" fill="#888">S: simplest, can ignore T  ·  T: high variance  ·  X: best for imbalanced treatment/control</text>
+</svg>

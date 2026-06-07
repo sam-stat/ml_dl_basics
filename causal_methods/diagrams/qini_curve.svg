@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 440" width="580" height="440" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="580" height="440" fill="#ffffff"/>
+  <text x="290" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#222">Qini / cumulative-gain curve</text>
+
+  <!-- axes -->
+  <path d="M70,360 L535,360" stroke="#555" stroke-width="1.4" fill="none" marker-end="url(#ax)"/>
+  <path d="M70,360 L70,70" stroke="#555" stroke-width="1.4" fill="none" marker-end="url(#ax)"/>
+  <text x="300" y="398" text-anchor="middle" font-size="12" fill="#444">fraction of users targeted (sorted by predicted uplift, high → low)</text>
+  <text x="26" y="215" text-anchor="middle" font-size="12" fill="#444" transform="rotate(-90 26 215)">cumulative incremental conversions</text>
+
+  <!-- random baseline (dashed) -->
+  <path d="M70,360 L520,150" stroke="#999" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+
+  <!-- model curve: steep rise, peak, flat, dip -->
+  <path d="M70,360 C 120,250 170,170 240,120 C 300,86 350,90 410,104 C 455,116 490,135 520,168"
+        stroke="#5cb85c" stroke-width="2.6" fill="none"/>
+
+  <!-- annotations -->
+  <text x="150" y="250" font-size="11" fill="#3a8a3a">steep early =</text>
+  <text x="150" y="265" font-size="11" fill="#3a8a3a">Persuadables</text>
+  <text x="320" y="78" text-anchor="middle" font-size="11" fill="#777">flat = Sure Things / Lost Causes</text>
+  <text x="498" y="200" text-anchor="middle" font-size="11" fill="#a83a36">dip =</text>
+  <text x="498" y="215" text-anchor="middle" font-size="11" fill="#a83a36">Sleeping Dogs</text>
+
+  <!-- legend -->
+  <line x1="350" y1="320" x2="385" y2="320" stroke="#5cb85c" stroke-width="2.6"/>
+  <text x="392" y="324" font-size="11" fill="#444">uplift model</text>
+  <line x1="350" y1="340" x2="385" y2="340" stroke="#999" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="392" y="344" font-size="11" fill="#444">random targeting</text>
+
+  <!-- formula -->
+  <text x="290" y="426" text-anchor="middle" font-size="12" fill="#333">Qini coefficient = area between the uplift curve and the random line</text>
+</svg>

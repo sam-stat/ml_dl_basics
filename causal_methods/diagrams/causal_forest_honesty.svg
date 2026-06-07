@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 380" width="780" height="380" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="cfharr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#777"/>
+    </marker>
+  </defs>
+  <rect width="780" height="380" fill="#ffffff"/>
+  <text x="390" y="26" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#222">Honesty — one half draws the boundaries, the other fills the leaves</text>
+
+  <!-- subsample -->
+  <rect x="24" y="48" width="168" height="42" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.6"/>
+  <text x="108" y="66" text-anchor="middle" font-size="12.5" fill="#2c5f93">tree subsample</text>
+  <text x="108" y="82" text-anchor="middle" font-size="11.5" fill="#2c5f93">≈ 5000 units</text>
+
+  <!-- fork (one-time split at the root) -->
+  <path d="M108,90 L108,140" stroke="#777" stroke-width="1.3" fill="none" marker-end="url(#cfharr)"/>
+  <path d="M108,90 L108,214" stroke="#777" stroke-width="1.3" fill="none" marker-end="url(#cfharr)"/>
+  <text x="118" y="120" font-size="10" fill="#999">split once,</text>
+  <text x="118" y="132" font-size="10" fill="#999">at the root</text>
+
+  <!-- J1 -->
+  <rect x="24" y="140" width="178" height="48" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.6"/>
+  <text x="113" y="159" text-anchor="middle" font-size="12.5" fill="#3a8a3a">splitting set  J₁  (2500)</text>
+  <text x="113" y="176" text-anchor="middle" font-size="11" fill="#3a8a3a">draws every boundary</text>
+
+  <!-- J2 -->
+  <rect x="24" y="214" width="178" height="48" rx="6" fill="#f9f0ff" stroke="#9b59b6" stroke-width="1.6"/>
+  <text x="113" y="233" text-anchor="middle" font-size="12.5" fill="#7a3fa0">estimating set  J₂  (2500)</text>
+  <text x="113" y="250" text-anchor="middle" font-size="11" fill="#7a3fa0">fills every leaf</text>
+
+  <!-- tree skeleton -->
+  <circle cx="500" cy="80" r="8" fill="#fff" stroke="#888" stroke-width="1.4"/>
+  <circle cx="448" cy="140" r="7" fill="#fff" stroke="#888" stroke-width="1.3"/>
+  <circle cx="558" cy="140" r="7" fill="#fff" stroke="#888" stroke-width="1.3"/>
+  <line x1="500" y1="88" x2="450" y2="133" stroke="#999" stroke-width="1.3"/>
+  <line x1="500" y1="88" x2="556" y2="133" stroke="#999" stroke-width="1.3"/>
+  <line x1="448" y1="147" x2="420" y2="198" stroke="#999" stroke-width="1.3"/>
+  <line x1="448" y1="147" x2="472" y2="198" stroke="#999" stroke-width="1.3"/>
+  <line x1="558" y1="147" x2="530" y2="198" stroke="#999" stroke-width="1.3"/>
+  <line x1="558" y1="147" x2="586" y2="198" stroke="#999" stroke-width="1.3"/>
+
+  <!-- leaves filled by J2 -->
+  <rect x="398" y="200" width="44" height="26" rx="4" fill="#f9f0ff" stroke="#9b59b6" stroke-width="1.6"/>
+  <text x="420" y="217" text-anchor="middle" font-size="11" fill="#7a3fa0">τ̂</text>
+  <rect x="450" y="200" width="44" height="26" rx="4" fill="#f9f0ff" stroke="#9b59b6" stroke-width="1.6"/>
+  <text x="472" y="217" text-anchor="middle" font-size="11" fill="#7a3fa0">τ̂</text>
+  <rect x="508" y="200" width="44" height="26" rx="4" fill="#f9f0ff" stroke="#9b59b6" stroke-width="1.6"/>
+  <text x="530" y="217" text-anchor="middle" font-size="11" fill="#7a3fa0">τ̂</text>
+  <rect x="564" y="200" width="44" height="26" rx="4" fill="#f9f0ff" stroke="#9b59b6" stroke-width="1.6"/>
+  <text x="586" y="217" text-anchor="middle" font-size="11" fill="#7a3fa0">τ̂</text>
+
+  <!-- J1 grows structure -->
+  <path d="M202,156 C 320,150 360,110 452,96" stroke="#5cb85c" stroke-width="1.5" fill="none" marker-end="url(#cfharr)"/>
+  <text x="300" y="120" text-anchor="middle" font-size="11" fill="#3a8a3a">① grow branches (J₁ only)</text>
+  <text x="612" y="78" font-size="10.5" font-style="italic" fill="#bbb">J₁ discarded ✗</text>
+
+  <!-- J2 fills leaves -->
+  <path d="M202,238 C 320,250 360,222 396,216" stroke="#9b59b6" stroke-width="1.5" fill="none" marker-end="url(#cfharr)"/>
+  <text x="300" y="268" text-anchor="middle" font-size="11" fill="#7a3fa0">② fill leaves → τ̂ (J₂ only)</text>
+
+  <!-- footer -->
+  <line x1="40" y1="300" x2="740" y2="300" stroke="#eee" stroke-width="1"/>
+  <text x="390" y="326" text-anchor="middle" font-size="12.5" fill="#333">leaf τ̂ uses only J₂, which never shaped the tree  →  unbiased effect, valid confidence intervals</text>
+  <text x="390" y="350" text-anchor="middle" font-size="11.5" font-style="italic" fill="#777">the data is halved once at the root — never re-halved as the tree grows deeper</text>
+</svg>
