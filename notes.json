@@ -1,0 +1,97 @@
+{
+  "generated": "2026-06-10T07:20:13+00:00",
+  "sections": [
+    {
+      "id": "neural_networks",
+      "title": "Neural Networks",
+      "topics": [
+        {
+          "file": "notes/neural_networks/01_basic_neural_networks.md",
+          "title": "Basic Neural Network Design",
+          "desc": "A neural network is a parametric function that maps an input x to an output y through a sequence of layers. Each layer applies a linear transformation…"
+        },
+        {
+          "file": "notes/neural_networks/02_training_issues.md",
+          "title": "Training Issues & Solutions",
+          "desc": "Deep networks are powerful but notoriously hard to train: gradients can vanish or explode as they pass through many layers, models can memorise instead of…"
+        },
+        {
+          "file": "notes/neural_networks/03_word_embeddings.md",
+          "title": "Word Embeddings",
+          "desc": "Neural networks operate on real-valued vectors. Words are discrete symbols — we need a way to convert them into vectors that capture semantic meaning."
+        },
+        {
+          "file": "notes/neural_networks/04_rnns_lstms.md",
+          "title": "RNNs & LSTMs",
+          "desc": "Feedforward networks treat all inputs as independent."
+        },
+        {
+          "file": "notes/neural_networks/05_cnns.md",
+          "title": "Convolutional Neural Networks (CNNs)",
+          "desc": "A standard feedforward network applied to images would need input weights per neuron — impractical for high-resolution images (e.g. inputs). CNNs solve…"
+        },
+        {
+          "file": "notes/neural_networks/06_transformers.md",
+          "title": "Transformers & Attention",
+          "desc": "RNNs process sequences step-by-step — to propagate information from position 1 to position 100, it must pass through 99 hidden states. This is a…"
+        },
+        {
+          "file": "notes/neural_networks/07_architecture_guide.md",
+          "title": "Architecture Guide — Which Network for Which Problem?",
+          "desc": "Picking an architecture is mostly about matching the structure of your data to the inductive bias of the model: grids of pixels favour convolution,…"
+        },
+        {
+          "file": "notes/neural_networks/08_agents_llms.md",
+          "title": "Agents & LLMs",
+          "desc": "A Large Language Model is a Transformer decoder trained on massive text corpora to predict the next token. The same architecture as Transformers &…"
+        }
+      ]
+    },
+    {
+      "id": "causal_methods",
+      "title": "Causal Methods",
+      "topics": [
+        {
+          "file": "notes/causal_methods/01_foundations.md",
+          "title": "Foundations of Causal Inference",
+          "desc": "Causal modelling is the leap from \"what is the relationship between X and Y?\" (correlation) to \"if I change X, how will Y respond?\" (causation). Most real…"
+        },
+        {
+          "file": "notes/causal_methods/02_estimands.md",
+          "title": "Estimands: What Exactly Are We Trying to Measure?",
+          "desc": "Before picking a method, name the number you want. \"Does the notification work?\" has at least three precise answers that can disagree. An estimand is that…"
+        },
+        {
+          "file": "notes/causal_methods/03_methods_taxonomy.md",
+          "title": "The Methods Taxonomy",
+          "desc": "After naming the estimand, pick a method to recover it — and which method is legal depends on how much control you had over who got treated. Estimation…"
+        },
+        {
+          "file": "notes/causal_methods/04_evaluation.md",
+          "title": "Evaluating Causal & Uplift Models",
+          "desc": "The trap that makes causal evaluation different: you can never check a single prediction against the truth. Ordinary ML predicts \"user converts,\" waits,…"
+        },
+        {
+          "file": "notes/causal_methods/05_meta_learners.md",
+          "title": "Causal ML: Meta-Learners",
+          "desc": "A standard ML model predicts a single outcome — will this user convert? It has no native notion of a treatment effect, because an effect is a difference…"
+        },
+        {
+          "file": "notes/causal_methods/06_double_machine_learning.md",
+          "title": "Double Machine Learning (DML)",
+          "desc": "When the path from X to Y is nonlinear and high-dimensional, the propensity-score and meta-learner toolkits both lean on a model that may quietly carry…"
+        },
+        {
+          "file": "notes/causal_methods/07_propensity_methods.md",
+          "title": "Propensity-Score Methods: Matching & Weighting",
+          "desc": "Observational data has no randomization: units self-select into treatment on covariates X, so a raw treated-minus-control gap mixes the treatment effect…"
+        },
+        {
+          "file": "notes/causal_methods/08_causal_forests.md",
+          "title": "Causal Forests",
+          "desc": "A standard random forest averages leaf outcomes to estimate — a quantity you can observe and train against. The treatment effect is not: each unit reveals…"
+        }
+      ]
+    }
+  ]
+}

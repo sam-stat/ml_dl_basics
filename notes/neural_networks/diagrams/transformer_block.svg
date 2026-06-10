@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 560" width="600" height="560" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="tf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa3ab"/>
+    </marker>
+    <marker id="td" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b0a8bb"/>
+    </marker>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="560" fill="#ffffff"/>
+  <text x="330" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2a2a2a">Transformer Encoder Block</text>
+
+  <g filter="url(#rough)">
+    <!-- forward arrows -->
+    <g stroke="#9aa3ab" stroke-width="1.5">
+      <line x1="330" y1="105" x2="330" y2="121" marker-end="url(#tf)"/>
+      <line x1="330" y1="173" x2="330" y2="189" marker-end="url(#tf)"/>
+      <line x1="330" y1="241" x2="330" y2="257" marker-end="url(#tf)"/>
+      <line x1="330" y1="309" x2="330" y2="325" marker-end="url(#tf)"/>
+      <line x1="330" y1="377" x2="330" y2="393" marker-end="url(#tf)"/>
+      <line x1="330" y1="445" x2="330" y2="461" marker-end="url(#tf)"/>
+    </g>
+    <!-- residual (dashed) -->
+    <g stroke="#b0a8bb" stroke-width="1.1" stroke-dasharray="4 3" fill="none">
+      <path d="M180,80 L150,80 L150,216 L178,216" marker-end="url(#td)"/>
+      <path d="M180,216 L128,216 L128,352 L178,352" marker-end="url(#td)"/>
+    </g>
+    <!-- xN bracket -->
+    <rect x="492" y="123" width="26" height="254" rx="4" fill="none" stroke="#ccc" stroke-width="1.2"/>
+    <!-- blocks -->
+    <rect x="180" y="55"  width="300" height="50" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.6"/>
+    <rect x="180" y="123" width="300" height="50" rx="6" fill="#e3f7fb" stroke="#46b5c9" stroke-width="1.6"/>
+    <rect x="180" y="191" width="300" height="50" rx="6" fill="#f3e9fb" stroke="#9b59b6" stroke-width="1.6"/>
+    <rect x="180" y="259" width="300" height="50" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.6"/>
+    <rect x="180" y="327" width="300" height="50" rx="6" fill="#f3e9fb" stroke="#9b59b6" stroke-width="1.6"/>
+    <rect x="180" y="395" width="300" height="50" rx="6" fill="#fdeaea" stroke="#d9534f" stroke-width="1.6"/>
+    <rect x="180" y="463" width="300" height="50" rx="6" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.6"/>
+  </g>
+
+  <!-- block text -->
+  <text x="330" y="76" text-anchor="middle" font-size="11.5" fill="#2c5f93">Input + Positional Enc.   <tspan fill="#333">x ∈ ℝ<tspan baseline-shift="super" font-size="8">n×d</tspan></tspan></text>
+  <text x="330" y="94" text-anchor="middle" font-size="8.5" fill="#88a">token embedding + position signal</text>
+
+  <text x="330" y="142" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#2a8199">Multi-Head Attention</text>
+  <text x="330" y="160" text-anchor="middle" font-size="8.5" fill="#777">Attention(Q, K, V) — h heads, concatenated &amp; projected</text>
+
+  <text x="330" y="211" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#7d3c98">Add &amp; Norm</text>
+  <text x="330" y="229" text-anchor="middle" font-size="8.5" fill="#777">LayerNorm(x + MHA output)</text>
+
+  <text x="330" y="278" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#3a8a3a">Feed-Forward Network</text>
+  <text x="330" y="296" text-anchor="middle" font-size="8.5" fill="#777">FFN(x) = ReLU(x W<tspan baseline-shift="sub" font-size="6.5">1</tspan> + b<tspan baseline-shift="sub" font-size="6.5">1</tspan>) W<tspan baseline-shift="sub" font-size="6.5">2</tspan> + b<tspan baseline-shift="sub" font-size="6.5">2</tspan> — per position</text>
+
+  <text x="330" y="347" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#7d3c98">Add &amp; Norm</text>
+  <text x="330" y="365" text-anchor="middle" font-size="8.5" fill="#777">LayerNorm(x + FFN output)</text>
+
+  <text x="330" y="415" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#a83a36">Output Representations</text>
+  <text x="330" y="433" text-anchor="middle" font-size="8.5" fill="#777">one vector h<tspan baseline-shift="sub" font-size="6.5">i</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7">d</tspan> per token</text>
+
+  <text x="330" y="483" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#9a6b1e">[CLS] token → Task Head</text>
+  <text x="330" y="501" text-anchor="middle" font-size="8.5" fill="#777">ŷ = softmax(W h<tspan baseline-shift="sub" font-size="6.5">CLS</tspan> + b)</text>
+
+  <text x="505" y="250" text-anchor="middle" font-size="10" fill="#999" transform="rotate(-90 505 250)">× N layers</text>
+
+  <!-- footnote -->
+  <text x="330" y="540" text-anchor="middle" font-size="9" fill="#888">Dashed = residual (skip) connections    W<tspan baseline-shift="sub" font-size="7">1</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7">d×4d</tspan>, W<tspan baseline-shift="sub" font-size="7">2</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7">4d×d</tspan>    LayerNorm stabilises training</text>
+</svg>

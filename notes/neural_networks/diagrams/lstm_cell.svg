@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="la" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+    </marker>
+    <marker id="lo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e67e22"/>
+    </marker>
+    <marker id="lb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4f86c6"/>
+    </marker>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="600" fill="#ffffff"/>
+  <text x="400" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#2a2a2a">LSTM Cell — Gate Architecture</text>
+
+  <!-- ── shapes (roughened) ── -->
+  <g filter="url(#rough)">
+    <!-- cell-state highway -->
+    <line x1="70" y1="110" x2="715" y2="110" stroke="#e67e22" stroke-width="3" marker-end="url(#lo)"/>
+    <!-- operator circles -->
+    <circle cx="185" cy="110" r="16" fill="#fff" stroke="#c0392b" stroke-width="2"/>
+    <circle cx="380" cy="110" r="16" fill="#fff" stroke="#27ae60" stroke-width="2"/>
+    <rect x="478" y="95" width="84" height="30" rx="4" fill="#fef9e7" stroke="#f39c12" stroke-width="1.6"/>
+    <circle cx="612" cy="110" r="16" fill="#fff" stroke="#2980b9" stroke-width="2"/>
+    <line x1="396" y1="110" x2="476" y2="110" stroke="#f39c12" stroke-width="1.8" marker-end="url(#la)"/>
+    <line x1="562" y1="110" x2="594" y2="110" stroke="#f39c12" stroke-width="1.8" marker-end="url(#la)"/>
+    <!-- h_t output -->
+    <line x1="612" y1="126" x2="612" y2="525" stroke="#4f86c6" stroke-width="1.8" marker-end="url(#lb)"/>
+    <!-- gate boxes -->
+    <rect x="95"  y="211" width="180" height="80" rx="6" fill="#fbeae8" stroke="#c0392b" stroke-width="1.7"/>
+    <rect x="285" y="211" width="180" height="80" rx="6" fill="#e9f7ef" stroke="#27ae60" stroke-width="1.7"/>
+    <rect x="537" y="211" width="150" height="80" rx="6" fill="#fbeee6" stroke="#d35400" stroke-width="1.7"/>
+    <rect x="165" y="316" width="180" height="80" rx="6" fill="#e8f1f8" stroke="#2980b9" stroke-width="1.7"/>
+    <!-- intermediate multiply -->
+    <circle cx="330" cy="180" r="13" fill="#fff" stroke="#999" stroke-width="1.4"/>
+    <!-- gate -> operator arrows -->
+    <line x1="185" y1="211" x2="185" y2="128" stroke="#c0392b" stroke-width="1.6" marker-end="url(#la)"/>
+    <line x1="612" y1="211" x2="612" y2="128" stroke="#d35400" stroke-width="1.6" marker-end="url(#la)"/>
+    <!-- input/candidate -> int_mul -->
+    <path d="M375,211 L375,193 L344,193" fill="none" stroke="#27ae60" stroke-width="1.6" marker-end="url(#la)"/>
+    <path d="M255,316 L255,193 L317,193" fill="none" stroke="#2980b9" stroke-width="1.6" marker-end="url(#la)"/>
+    <!-- int_mul -> add -->
+    <path d="M330,167 L330,142 L380,142 L380,128" fill="none" stroke="#999" stroke-width="1.6" marker-end="url(#la)"/>
+    <!-- input bar -->
+    <rect x="70" y="468" width="660" height="34" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.7"/>
+    <!-- bar -> gates -->
+    <g stroke="#4f86c6" stroke-width="1.6">
+      <line x1="185" y1="468" x2="185" y2="293" marker-end="url(#lb)"/>
+      <line x1="375" y1="468" x2="375" y2="293" marker-end="url(#lb)"/>
+      <line x1="255" y1="468" x2="255" y2="398" marker-end="url(#lb)"/>
+      <line x1="612" y1="468" x2="612" y2="293" marker-end="url(#lb)"/>
+    </g>
+    <!-- formula box -->
+    <rect x="70" y="524" width="660" height="52" rx="6" fill="#fafafa" stroke="#cfcfcf" stroke-width="1"/>
+  </g>
+
+  <!-- ── labels (crisp) ── -->
+  <text x="50"  y="106" text-anchor="end"    font-size="12" font-style="italic" fill="#e67e22">c<tspan baseline-shift="sub" font-size="8">t−1</tspan></text>
+  <text x="725" y="106" text-anchor="start"  font-size="12" font-style="italic" fill="#e67e22">c<tspan baseline-shift="sub" font-size="8">t</tspan></text>
+  <text x="185" y="115" text-anchor="middle" font-size="15" fill="#c0392b">⊙</text>
+  <text x="380" y="115" text-anchor="middle" font-size="15" fill="#27ae60">⊕</text>
+  <text x="520" y="114" text-anchor="middle" font-size="12" font-weight="bold" fill="#b9770f">tanh(c<tspan baseline-shift="sub" font-size="8">t</tspan>)</text>
+  <text x="612" y="115" text-anchor="middle" font-size="15" fill="#2980b9">⊙</text>
+  <text x="330" y="184" text-anchor="middle" font-size="11" fill="#999">⊙</text>
+  <text x="372" y="172" text-anchor="middle" font-size="9" fill="#999">i<tspan baseline-shift="sub" font-size="7">t</tspan>⊙c̃<tspan baseline-shift="sub" font-size="7">t</tspan></text>
+  <text x="628" y="320" font-size="12" font-style="italic" fill="#4f86c6">h<tspan baseline-shift="sub" font-size="8">t</tspan> (hidden state output)</text>
+
+  <!-- Forget gate -->
+  <text x="185" y="234" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#c0392b">Forget Gate</text>
+  <text x="185" y="256" text-anchor="middle" font-size="11.5" fill="#333">f<tspan baseline-shift="sub" font-size="8">t</tspan> = σ(W<tspan baseline-shift="sub" font-size="8">f</tspan> [h<tspan baseline-shift="sub" font-size="8">t−1</tspan>, x<tspan baseline-shift="sub" font-size="8">t</tspan>] + b<tspan baseline-shift="sub" font-size="8">f</tspan>)</text>
+  <text x="185" y="275" text-anchor="middle" font-size="9.5" fill="#888">fraction of c<tspan baseline-shift="sub" font-size="7">t−1</tspan> to keep ∈(0,1)</text>
+
+  <!-- Input gate -->
+  <text x="375" y="234" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#27ae60">Input Gate</text>
+  <text x="375" y="256" text-anchor="middle" font-size="11.5" fill="#333">i<tspan baseline-shift="sub" font-size="8">t</tspan> = σ(W<tspan baseline-shift="sub" font-size="8">i</tspan> [h<tspan baseline-shift="sub" font-size="8">t−1</tspan>, x<tspan baseline-shift="sub" font-size="8">t</tspan>] + b<tspan baseline-shift="sub" font-size="8">i</tspan>)</text>
+  <text x="375" y="275" text-anchor="middle" font-size="9.5" fill="#888">how much new info to write ∈(0,1)</text>
+
+  <!-- Output gate -->
+  <text x="612" y="234" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#d35400">Output Gate</text>
+  <text x="612" y="256" text-anchor="middle" font-size="11" fill="#333">o<tspan baseline-shift="sub" font-size="8">t</tspan> = σ(W<tspan baseline-shift="sub" font-size="8">o</tspan> [h<tspan baseline-shift="sub" font-size="8">t−1</tspan>, x<tspan baseline-shift="sub" font-size="8">t</tspan>] + b<tspan baseline-shift="sub" font-size="8">o</tspan>)</text>
+  <text x="612" y="275" text-anchor="middle" font-size="9.5" fill="#888">what part of c<tspan baseline-shift="sub" font-size="7">t</tspan> to expose</text>
+
+  <!-- Cell candidate -->
+  <text x="255" y="339" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#2980b9">Cell Candidate</text>
+  <text x="255" y="361" text-anchor="middle" font-size="11.5" fill="#333">c̃<tspan baseline-shift="sub" font-size="8">t</tspan> = tanh(W<tspan baseline-shift="sub" font-size="8">c</tspan> [h<tspan baseline-shift="sub" font-size="8">t−1</tspan>, x<tspan baseline-shift="sub" font-size="8">t</tspan>] + b<tspan baseline-shift="sub" font-size="8">c</tspan>)</text>
+  <text x="255" y="380" text-anchor="middle" font-size="9.5" fill="#888">new candidate values ∈(−1,1)</text>
+
+  <!-- input bar label -->
+  <text x="400" y="490" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#3a6ea5">[h<tspan baseline-shift="sub" font-size="8">t−1</tspan>, x<tspan baseline-shift="sub" font-size="8">t</tspan>]<tspan font-weight="normal" fill="#555"> — concatenated input, fed to all four gates</tspan></text>
+
+  <!-- formula box -->
+  <text x="400" y="547" text-anchor="middle" font-size="12.5" fill="#333"><tspan font-weight="bold">Cell update:</tspan> c<tspan baseline-shift="sub" font-size="8">t</tspan> = f<tspan baseline-shift="sub" font-size="8">t</tspan>⊙c<tspan baseline-shift="sub" font-size="8">t−1</tspan> ⊕ i<tspan baseline-shift="sub" font-size="8">t</tspan>⊙c̃<tspan baseline-shift="sub" font-size="8">t</tspan>     <tspan font-weight="bold">Hidden output:</tspan> h<tspan baseline-shift="sub" font-size="8">t</tspan> = o<tspan baseline-shift="sub" font-size="8">t</tspan>⊙tanh(c<tspan baseline-shift="sub" font-size="8">t</tspan>)</text>
+  <text x="400" y="567" text-anchor="middle" font-size="9.5" fill="#888">cell state c is a memory highway — additive updates prevent vanishing gradients</text>
+</svg>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 440" width="600" height="440" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="ffarr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+    </marker>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="440" fill="#ffffff"/>
+
+  <!-- ── shapes (roughened) ── -->
+  <g filter="url(#rough)">
+    <!-- input -> hidden connections -->
+    <g stroke="#b9c0c7" stroke-width="1">
+      <line x1="116" y1="110" x2="269" y2="145"/><line x1="116" y1="110" x2="269" y2="210"/><line x1="116" y1="110" x2="269" y2="275"/>
+      <line x1="116" y1="175" x2="269" y2="145"/><line x1="116" y1="175" x2="269" y2="210"/><line x1="116" y1="175" x2="269" y2="275"/>
+      <line x1="116" y1="240" x2="269" y2="145"/><line x1="116" y1="240" x2="269" y2="210"/><line x1="116" y1="240" x2="269" y2="275"/>
+      <line x1="116" y1="305" x2="269" y2="145"/><line x1="116" y1="305" x2="269" y2="210"/><line x1="116" y1="305" x2="269" y2="275"/>
+    </g>
+    <!-- hidden -> output -->
+    <g stroke="#b9c0c7" stroke-width="1">
+      <line x1="311" y1="145" x2="449" y2="210"/><line x1="311" y1="210" x2="449" y2="210"/><line x1="311" y1="275" x2="449" y2="210"/>
+    </g>
+    <!-- incoming arrows -->
+    <g stroke="#9aa3ab" stroke-width="1.2">
+      <line x1="40" y1="110" x2="72" y2="110" marker-end="url(#ffarr)"/>
+      <line x1="40" y1="175" x2="72" y2="175" marker-end="url(#ffarr)"/>
+      <line x1="40" y1="240" x2="72" y2="240" marker-end="url(#ffarr)"/>
+      <line x1="40" y1="305" x2="72" y2="305" marker-end="url(#ffarr)"/>
+    </g>
+    <!-- output arrow -->
+    <line x1="492" y1="210" x2="548" y2="210" stroke="#9aa3ab" stroke-width="1.6" marker-end="url(#ffarr)"/>
+    <!-- input nodes -->
+    <circle cx="95" cy="110" r="21" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.8"/>
+    <circle cx="95" cy="175" r="21" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.8"/>
+    <circle cx="95" cy="240" r="21" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.8"/>
+    <circle cx="95" cy="305" r="21" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.8"/>
+    <!-- hidden nodes -->
+    <circle cx="290" cy="145" r="21" fill="#edfaed" stroke="#5cb85c" stroke-width="1.8"/>
+    <circle cx="290" cy="210" r="21" fill="#edfaed" stroke="#5cb85c" stroke-width="1.8"/>
+    <circle cx="290" cy="275" r="21" fill="#edfaed" stroke="#5cb85c" stroke-width="1.8"/>
+    <!-- output node -->
+    <circle cx="470" cy="210" r="22" fill="#fdeaea" stroke="#d9534f" stroke-width="1.8"/>
+    <!-- annotation box -->
+    <rect x="40" y="360" width="520" height="60" rx="6" fill="#fafafa" stroke="#cfcfcf" stroke-width="1"/>
+  </g>
+
+  <!-- ── labels (crisp) ── -->
+  <text x="95"  y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#3a6ea5">Input Layer</text>
+  <text x="290" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#4a9a4a">Hidden Layer</text>
+  <text x="470" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0463f">Output Layer</text>
+
+  <g font-size="13" fill="#2c3e50" text-anchor="middle">
+    <text x="95" y="115">x<tspan baseline-shift="sub" font-size="9">1</tspan></text>
+    <text x="95" y="180">x<tspan baseline-shift="sub" font-size="9">2</tspan></text>
+    <text x="95" y="245">x<tspan baseline-shift="sub" font-size="9">3</tspan></text>
+    <text x="95" y="310">x<tspan baseline-shift="sub" font-size="9">4</tspan></text>
+    <text x="290" y="150">a<tspan baseline-shift="sub" font-size="9">1</tspan><tspan baseline-shift="super" font-size="9">(1)</tspan></text>
+    <text x="290" y="215">a<tspan baseline-shift="sub" font-size="9">2</tspan><tspan baseline-shift="super" font-size="9">(1)</tspan></text>
+    <text x="290" y="280">a<tspan baseline-shift="sub" font-size="9">3</tspan><tspan baseline-shift="super" font-size="9">(1)</tspan></text>
+    <text x="470" y="216" font-size="15">ŷ</text>
+  </g>
+
+  <text x="195" y="98"  text-anchor="middle" font-size="14" fill="#555">W<tspan baseline-shift="super" font-size="9">(1)</tspan></text>
+  <text x="382" y="150" text-anchor="middle" font-size="14" fill="#555">W<tspan baseline-shift="super" font-size="9">(2)</tspan></text>
+  <text x="556" y="206" font-size="11" fill="#777">output</text>
+
+  <text x="300" y="385" text-anchor="middle" font-size="12.5" fill="#333"><tspan font-weight="bold">Pre-activation:</tspan>  z<tspan baseline-shift="super" font-size="9">(ℓ)</tspan> = W<tspan baseline-shift="super" font-size="9">(ℓ)</tspan> a<tspan baseline-shift="super" font-size="9">(ℓ−1)</tspan> + b<tspan baseline-shift="super" font-size="9">(ℓ)</tspan></text>
+  <text x="300" y="407" text-anchor="middle" font-size="12.5" fill="#333"><tspan font-weight="bold">Post-activation:</tspan>  a<tspan baseline-shift="super" font-size="9">(ℓ)</tspan> = σ(z<tspan baseline-shift="super" font-size="9">(ℓ)</tspan>),   where a<tspan baseline-shift="super" font-size="9">(0)</tspan> = x</text>
+</svg>

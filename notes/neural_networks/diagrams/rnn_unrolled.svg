@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 300" width="820" height="300" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="rh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4f86c6"/>
+    </marker>
+    <marker id="rg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa3ab"/>
+    </marker>
+    <marker id="rr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c0463f"/>
+    </marker>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="820" height="300" fill="#ffffff"/>
+  <text x="410" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#2a2a2a">RNN — Unrolled Through Time</text>
+
+  <g filter="url(#rough)">
+    <!-- hidden-state arrows -->
+    <line x1="102" y1="110" x2="148" y2="110" stroke="#4f86c6" stroke-width="1.6" marker-end="url(#rh)"/>
+    <line x1="300" y1="110" x2="368" y2="110" stroke="#4f86c6" stroke-width="1.6" marker-end="url(#rh)"/>
+    <line x1="520" y1="110" x2="588" y2="110" stroke="#4f86c6" stroke-width="1.6" marker-end="url(#rh)"/>
+    <line x1="740" y1="110" x2="788" y2="110" stroke="#c0463f" stroke-width="1.6" marker-end="url(#rr)"/>
+    <!-- x input arrows -->
+    <line x1="225" y1="196" x2="225" y2="152" stroke="#9aa3ab" stroke-width="1.3" marker-end="url(#rg)"/>
+    <line x1="445" y1="196" x2="445" y2="152" stroke="#9aa3ab" stroke-width="1.3" marker-end="url(#rg)"/>
+    <line x1="665" y1="196" x2="665" y2="152" stroke="#9aa3ab" stroke-width="1.3" marker-end="url(#rg)"/>
+    <!-- h0 init box -->
+    <rect x="30" y="82" width="72" height="56" rx="5" fill="#f3f3f3" stroke="#aaa" stroke-width="1.4"/>
+    <!-- RNN cells -->
+    <rect x="150" y="70" width="150" height="80" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.7"/>
+    <rect x="370" y="70" width="150" height="80" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.7"/>
+    <rect x="590" y="70" width="150" height="80" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.7"/>
+    <!-- shared-weights note -->
+    <rect x="120" y="236" width="580" height="34" rx="5" fill="#fffdf0" stroke="#f0ad4e" stroke-width="1.4"/>
+  </g>
+
+  <!-- h0 box text -->
+  <text x="66" y="106" text-anchor="middle" font-size="12" fill="#444">h<tspan baseline-shift="sub" font-size="8">0</tspan></text>
+  <text x="66" y="124" text-anchor="middle" font-size="8.5" fill="#999">(zeros)</text>
+
+  <!-- cell text -->
+  <text x="225" y="100" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#2d7a2d">RNN Cell  t = 1</text>
+  <text x="225" y="124" text-anchor="middle" font-size="10.5" fill="#333">h<tspan baseline-shift="sub" font-size="7.5">1</tspan> = tanh(W<tspan baseline-shift="sub" font-size="7.5">h</tspan>h<tspan baseline-shift="sub" font-size="7.5">0</tspan> + W<tspan baseline-shift="sub" font-size="7.5">x</tspan>x<tspan baseline-shift="sub" font-size="7.5">1</tspan>)</text>
+  <text x="445" y="100" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#2d7a2d">RNN Cell  t = 2</text>
+  <text x="445" y="124" text-anchor="middle" font-size="10.5" fill="#333">h<tspan baseline-shift="sub" font-size="7.5">2</tspan> = tanh(W<tspan baseline-shift="sub" font-size="7.5">h</tspan>h<tspan baseline-shift="sub" font-size="7.5">1</tspan> + W<tspan baseline-shift="sub" font-size="7.5">x</tspan>x<tspan baseline-shift="sub" font-size="7.5">2</tspan>)</text>
+  <text x="665" y="100" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#2d7a2d">RNN Cell  t = 3</text>
+  <text x="665" y="124" text-anchor="middle" font-size="10.5" fill="#333">h<tspan baseline-shift="sub" font-size="7.5">3</tspan> = tanh(…)</text>
+
+  <!-- hidden-state labels -->
+  <g font-size="10.5" font-style="italic" fill="#4f86c6" text-anchor="middle">
+    <text x="125" y="103">h<tspan baseline-shift="sub" font-size="7.5">0</tspan></text>
+    <text x="334" y="103">h<tspan baseline-shift="sub" font-size="7.5">1</tspan></text>
+    <text x="554" y="103">h<tspan baseline-shift="sub" font-size="7.5">2</tspan></text>
+  </g>
+  <!-- x labels -->
+  <g font-size="11" font-style="italic" fill="#777" text-anchor="middle">
+    <text x="225" y="212">x<tspan baseline-shift="sub" font-size="8">1</tspan></text>
+    <text x="445" y="212">x<tspan baseline-shift="sub" font-size="8">2</tspan></text>
+    <text x="665" y="212">x<tspan baseline-shift="sub" font-size="8">3</tspan></text>
+  </g>
+
+  <!-- note -->
+  <text x="410" y="258" text-anchor="middle" font-size="11" fill="#7d5c00">⚠  W<tspan baseline-shift="sub" font-size="8">h</tspan>, W<tspan baseline-shift="sub" font-size="8">x</tspan>, b are <tspan font-weight="bold">shared</tspan> across all time steps — not separate per step</text>
+</svg>

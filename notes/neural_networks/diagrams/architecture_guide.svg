@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580" width="900" height="580" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <filter id="rough" x="-3%" y="-3%" width="106%" height="106%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="580" fill="#ffffff"/>
+  <text x="450" y="28" text-anchor="middle" font-size="14" font-style="italic" fill="#444">Which neural-network architecture to use for each problem type</text>
+
+  <g filter="url(#rough)">
+    <!-- row backgrounds (alternating) -->
+    <rect x="20" y="48" width="860" height="32" fill="#e8eaed"/>
+    <rect x="20" y="80"  width="860" height="40" fill="#f0f6ff"/>
+    <rect x="20" y="120" width="860" height="40" fill="#ffffff"/>
+    <rect x="20" y="160" width="860" height="40" fill="#f0f6ff"/>
+    <rect x="20" y="200" width="860" height="40" fill="#ffffff"/>
+    <rect x="20" y="240" width="860" height="40" fill="#f0f6ff"/>
+    <rect x="20" y="280" width="860" height="40" fill="#ffffff"/>
+    <rect x="20" y="320" width="860" height="40" fill="#f0f6ff"/>
+    <rect x="20" y="360" width="860" height="40" fill="#ffffff"/>
+    <rect x="20" y="400" width="860" height="40" fill="#f0f6ff"/>
+    <!-- outer + column rules -->
+    <rect x="20" y="48" width="860" height="392" fill="none" stroke="#c9ccd1" stroke-width="1.2"/>
+    <line x1="150" y1="48" x2="150" y2="440" stroke="#d8dbe0" stroke-width="1"/>
+    <line x1="262" y1="48" x2="262" y2="440" stroke="#d8dbe0" stroke-width="1"/>
+    <line x1="412" y1="48" x2="412" y2="440" stroke="#d8dbe0" stroke-width="1"/>
+    <line x1="730" y1="48" x2="730" y2="440" stroke="#d8dbe0" stroke-width="1"/>
+    <line x1="20" y1="80" x2="880" y2="80" stroke="#c9ccd1" stroke-width="1.1"/>
+    <!-- rule of thumb box -->
+    <rect x="20" y="470" width="860" height="88" rx="6" fill="#fff6ea" stroke="#f0ad4e" stroke-width="1.6"/>
+  </g>
+
+  <!-- header -->
+  <g font-size="11" font-weight="bold" fill="#333">
+    <text x="30" y="69">Task</text>
+    <text x="160" y="69">Input</text>
+    <text x="272" y="69">Architecture</text>
+    <text x="422" y="69">Key Reason</text>
+    <text x="740" y="69">Example</text>
+  </g>
+
+  <!-- rows -->
+  <g font-size="9.5" fill="#333">
+    <!-- 1 -->
+    <text x="30" y="104">Image Classification</text>
+    <text x="160" y="104" font-size="9">Image (H×W×C)</text>
+    <text x="272" y="104" font-weight="bold">CNN</text>
+    <text x="422" y="98" font-size="9">Spatial locality, weight sharing;</text>
+    <text x="422" y="111" font-size="9">filters: edges → shapes → objects</text>
+    <text x="740" y="104" font-size="9">ResNet, EfficientNet</text>
+    <!-- 2 -->
+    <text x="30" y="144">Object Detection</text>
+    <text x="160" y="144" font-size="9">Image (H×W×C)</text>
+    <text x="272" y="144" font-weight="bold">CNN + Region Head</text>
+    <text x="422" y="138" font-size="9">Multi-scale feature maps;</text>
+    <text x="422" y="151" font-size="9">backbone CNN + detection head</text>
+    <text x="740" y="144" font-size="9">YOLO, Faster R-CNN</text>
+    <!-- 3 -->
+    <text x="30" y="184">Named Entity Recog.</text>
+    <text x="160" y="184" font-size="9">Token sequence</text>
+    <text x="272" y="184" font-weight="bold">BiLSTM-CRF / BERT</text>
+    <text x="422" y="178" font-size="9">Bidirectional context per token;</text>
+    <text x="422" y="191" font-size="9">CRF models label transitions</text>
+    <text x="740" y="184" font-size="9">spaCy, BERT-NER</text>
+    <!-- 4 -->
+    <text x="30" y="224">Text Classification</text>
+    <text x="160" y="224" font-size="9">Text sequence</text>
+    <text x="272" y="224" font-weight="bold">BERT / CNN / LSTM</text>
+    <text x="422" y="218" font-size="9">Global context or local n-grams;</text>
+    <text x="422" y="231" font-size="9">BERT ≫ LSTM ≫ CNN accuracy</text>
+    <text x="740" y="224" font-size="9">BERT fine-tune</text>
+    <!-- 5 -->
+    <text x="30" y="264">Seq-to-Seq</text>
+    <text x="160" y="264" font-size="9">Source sequence</text>
+    <text x="272" y="264" font-weight="bold">Transformer Enc–Dec</text>
+    <text x="422" y="258" font-size="9">Attention over full source;</text>
+    <text x="422" y="271" font-size="9">encoder reads, decoder attends</text>
+    <text x="740" y="264" font-size="9">T5, BART, mT5</text>
+    <!-- 6 -->
+    <text x="30" y="304">Language Modelling</text>
+    <text x="160" y="304" font-size="9">Token sequence</text>
+    <text x="272" y="304" font-weight="bold">Transformer Dec (GPT)</text>
+    <text x="422" y="298" font-size="9">Causal left-to-right attention;</text>
+    <text x="422" y="311" font-size="9">masked self-attn: no future tokens</text>
+    <text x="740" y="304" font-size="9">GPT-2/3/4, LLaMA</text>
+    <!-- 7 -->
+    <text x="30" y="344">Time Series</text>
+    <text x="160" y="344" font-size="9">Numeric sequence</text>
+    <text x="272" y="344" font-weight="bold">LSTM / Transformer</text>
+    <text x="422" y="338" font-size="9">Temporal state or attention;</text>
+    <text x="422" y="351" font-size="9">LSTM moderate; Transformer long-range</text>
+    <text x="740" y="344" font-size="9">Temporal Fusion Trans.</text>
+    <!-- 8 -->
+    <text x="30" y="384">Question Answering</text>
+    <text x="160" y="384" font-size="9">[Question, Context]</text>
+    <text x="272" y="384" font-weight="bold">BERT + Span Head</text>
+    <text x="422" y="378" font-size="9">Bidirectional understanding;</text>
+    <text x="422" y="391" font-size="9">predicts start/end span in context</text>
+    <text x="740" y="384" font-size="9">BERT-large (SQuAD)</text>
+    <!-- 9 -->
+    <text x="30" y="424">Semantic Search</text>
+    <text x="160" y="424" font-size="9">Text</text>
+    <text x="272" y="424" font-weight="bold">Bi-encoder (SBERT)</text>
+    <text x="422" y="418" font-size="9">Dense vector similarity;</text>
+    <text x="422" y="431" font-size="9">encode query &amp; docs, cosine sim</text>
+    <text x="740" y="424" font-size="9">FAISS, Pinecone</text>
+  </g>
+
+  <!-- rule of thumb -->
+  <text x="36" y="492" font-size="12" font-weight="bold" fill="#9a6b1e">Rule of Thumb</text>
+  <text x="36" y="513" font-size="10.5" fill="#444"><tspan font-weight="bold">Image</tspan> → CNN.    <tspan font-weight="bold">Text / sequence</tspan> → BERT or Transformer (LSTM if low-resource).</text>
+  <text x="36" y="533" font-size="10.5" fill="#444"><tspan font-weight="bold">Token-level</tspan> → BiLSTM-CRF / BERT token head.    <tspan font-weight="bold">Generation</tspan> → Transformer decoder (GPT-style).</text>
+</svg>

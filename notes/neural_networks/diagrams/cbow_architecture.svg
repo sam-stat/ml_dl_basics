@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 390" width="780" height="390" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="ca" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa3ab"/>
+    </marker>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="780" height="390" fill="#ffffff"/>
+  <text x="390" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#2a2a2a">CBOW — Continuous Bag of Words</text>
+
+  <g filter="url(#rough)">
+    <!-- context -> embedding arrows -->
+    <g stroke="#9aa3ab" stroke-width="1.2">
+      <line x1="110" y1="70"  x2="178" y2="70"  marker-end="url(#ca)"/>
+      <line x1="110" y1="125" x2="178" y2="125" marker-end="url(#ca)"/>
+      <line x1="110" y1="180" x2="178" y2="180" marker-end="url(#ca)"/>
+      <line x1="110" y1="235" x2="178" y2="235" marker-end="url(#ca)"/>
+    </g>
+    <!-- embedding -> avg arrows -->
+    <g stroke="#9aa3ab" stroke-width="1.2" fill="none">
+      <path d="M300,70  C 345,70  345,140 378,150" marker-end="url(#ca)"/>
+      <path d="M300,125 C 345,125 350,148 378,152" marker-end="url(#ca)"/>
+      <path d="M300,180 C 345,180 350,158 378,158" marker-end="url(#ca)"/>
+      <path d="M300,235 C 345,235 345,165 378,160" marker-end="url(#ca)"/>
+    </g>
+    <!-- avg -> softmax -->
+    <line x1="510" y1="152" x2="558" y2="152" stroke="#9aa3ab" stroke-width="1.4" marker-end="url(#ca)"/>
+    <!-- context boxes -->
+    <rect x="20" y="50"  width="90" height="40" rx="4" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+    <rect x="20" y="105" width="90" height="40" rx="4" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+    <rect x="20" y="160" width="90" height="40" rx="4" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+    <rect x="20" y="215" width="90" height="40" rx="4" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.5"/>
+    <!-- embedding boxes -->
+    <rect x="180" y="52"  width="120" height="36" rx="4" fill="#fff8e1" stroke="#e0a93b" stroke-width="1.5"/>
+    <rect x="180" y="107" width="120" height="36" rx="4" fill="#fff8e1" stroke="#e0a93b" stroke-width="1.5"/>
+    <rect x="180" y="162" width="120" height="36" rx="4" fill="#fff8e1" stroke="#e0a93b" stroke-width="1.5"/>
+    <rect x="180" y="217" width="120" height="36" rx="4" fill="#fff8e1" stroke="#e0a93b" stroke-width="1.5"/>
+    <!-- avg box -->
+    <rect x="380" y="115" width="130" height="74" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.7"/>
+    <!-- softmax box -->
+    <rect x="560" y="120" width="130" height="64" rx="6" fill="#fdeaea" stroke="#d9534f" stroke-width="1.7"/>
+    <!-- formula box -->
+    <rect x="40" y="300" width="700" height="72" rx="6" fill="#fafafa" stroke="#cfcfcf" stroke-width="1"/>
+  </g>
+
+  <!-- context labels -->
+  <g text-anchor="middle">
+    <text x="65" y="68" font-size="11" fill="#2c5f93">w<tspan baseline-shift="sub" font-size="8">t−2</tspan></text><text x="65" y="82" font-size="8" fill="#88a">context</text>
+    <text x="65" y="123" font-size="11" fill="#2c5f93">w<tspan baseline-shift="sub" font-size="8">t−1</tspan></text><text x="65" y="137" font-size="8" fill="#88a">context</text>
+    <text x="65" y="178" font-size="11" fill="#2c5f93">w<tspan baseline-shift="sub" font-size="8">t+1</tspan></text><text x="65" y="192" font-size="8" fill="#88a">context</text>
+    <text x="65" y="233" font-size="11" fill="#2c5f93">w<tspan baseline-shift="sub" font-size="8">t+2</tspan></text><text x="65" y="247" font-size="8" fill="#88a">context</text>
+  </g>
+  <!-- embedding labels -->
+  <text x="240" y="40" text-anchor="middle" font-size="9" fill="#999">Embedding lookup (W<tspan baseline-shift="sub" font-size="7">in</tspan>)</text>
+  <g text-anchor="middle" font-size="10.5" fill="#8a6d1e">
+    <text x="240" y="74">v<tspan baseline-shift="sub" font-size="7.5">w(t−2)</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7.5">d</tspan></text>
+    <text x="240" y="129">v<tspan baseline-shift="sub" font-size="7.5">w(t−1)</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7.5">d</tspan></text>
+    <text x="240" y="184">v<tspan baseline-shift="sub" font-size="7.5">w(t+1)</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7.5">d</tspan></text>
+    <text x="240" y="239">v<tspan baseline-shift="sub" font-size="7.5">w(t+2)</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7.5">d</tspan></text>
+  </g>
+  <!-- avg box text -->
+  <text x="445" y="139" text-anchor="middle" font-size="11" font-weight="bold" fill="#3a8a3a">Average</text>
+  <text x="445" y="158" text-anchor="middle" font-size="11" fill="#333">h = (1/n) Σ<tspan baseline-shift="sub" font-size="7.5">i</tspan> v<tspan baseline-shift="sub" font-size="7.5">w(i)</tspan></text>
+  <text x="445" y="176" text-anchor="middle" font-size="9" fill="#888">h ∈ ℝ<tspan baseline-shift="super" font-size="7">d</tspan></text>
+  <!-- softmax box text -->
+  <text x="625" y="141" text-anchor="middle" font-size="11" font-weight="bold" fill="#a83a36">Softmax</text>
+  <text x="625" y="159" text-anchor="middle" font-size="11" fill="#333">P(w<tspan baseline-shift="sub" font-size="7.5">t</tspan> | ctx)</text>
+  <text x="625" y="176" text-anchor="middle" font-size="9" fill="#888">over |V| vocab</text>
+
+  <!-- formula box text -->
+  <text x="70" y="328" font-size="12" fill="#333"><tspan font-weight="bold">CBOW objective:</tspan>   P(w<tspan baseline-shift="sub" font-size="8">t</tspan> | context) = exp(u<tspan baseline-shift="sub" font-size="8">w(t)</tspan> · h) / Σ<tspan baseline-shift="sub" font-size="8">k∈V</tspan> exp(u<tspan baseline-shift="sub" font-size="8">k</tspan> · h)</text>
+  <text x="70" y="352" font-size="11" fill="#555">u<tspan baseline-shift="sub" font-size="7.5">w</tspan> = output embedding,   v<tspan baseline-shift="sub" font-size="7.5">w</tspan> = input embedding   (two matrices W<tspan baseline-shift="sub" font-size="7.5">in</tspan>, W<tspan baseline-shift="sub" font-size="7.5">out</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7.5">|V|×d</tspan>)</text>
+</svg>

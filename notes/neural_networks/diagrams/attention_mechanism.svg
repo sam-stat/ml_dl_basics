@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 500" width="620" height="500" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa3ab"/>
+    </marker>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="620" height="500" fill="#ffffff"/>
+  <text x="310" y="22" text-anchor="middle" font-size="15" font-weight="bold" fill="#2a2a2a">Scaled Dot-Product Attention</text>
+
+  <g filter="url(#rough)" fill="none" stroke="#9aa3ab" stroke-width="1.3">
+    <!-- input -> Q,K,V -->
+    <path d="M310,74 L310,88 L120,88 L120,98" marker-end="url(#at)"/>
+    <path d="M310,74 L310,98" marker-end="url(#at)"/>
+    <path d="M310,74 L310,88 L500,88 L500,98" marker-end="url(#at)"/>
+    <!-- Q,K -> Score -->
+    <path d="M120,152 L120,190 L170,190 L170,208" marker-end="url(#at)"/>
+    <path d="M310,152 L310,190 L250,190 L250,208" marker-end="url(#at)"/>
+    <!-- Score -> Softmax -->
+    <path d="M215,262 L215,298" marker-end="url(#at)"/>
+    <!-- Softmax -> Output -->
+    <path d="M215,352 L215,378 L280,378 L280,398" marker-end="url(#at)"/>
+    <!-- V -> Output (pass-through) -->
+    <path d="M500,152 L500,378 L360,378 L360,398" marker-end="url(#at)"/>
+  </g>
+
+  <g filter="url(#rough)">
+    <rect x="180" y="28"  width="260" height="46" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.7"/>
+    <rect x="45"  y="100" width="150" height="52" rx="6" fill="#ffe8cc" stroke="#e0972f" stroke-width="1.7"/>
+    <rect x="235" y="100" width="150" height="52" rx="6" fill="#fff8e1" stroke="#d4a017" stroke-width="1.7"/>
+    <rect x="425" y="100" width="150" height="52" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.7"/>
+    <rect x="70"  y="210" width="290" height="52" rx="6" fill="#f5edfb" stroke="#9b59b6" stroke-width="1.7"/>
+    <rect x="70"  y="300" width="290" height="52" rx="6" fill="#ead9f5" stroke="#8e44ad" stroke-width="1.7"/>
+    <rect x="150" y="400" width="320" height="52" rx="6" fill="#e3f5f3" stroke="#2aa198" stroke-width="1.7"/>
+  </g>
+
+  <!-- input -->
+  <text x="310" y="49" text-anchor="middle" font-size="11.5" fill="#2c5f93">Input  X ∈ ℝ<tspan baseline-shift="super" font-size="8">n×d</tspan></text>
+  <text x="310" y="65" text-anchor="middle" font-size="9" fill="#88a">n tokens, each a d-dimensional vector</text>
+  <!-- Q K V -->
+  <text x="120" y="123" text-anchor="middle" font-size="11.5" fill="#333"><tspan font-weight="bold">Q</tspan> = X W<tspan baseline-shift="super" font-size="8">Q</tspan></text>
+  <text x="120" y="140" text-anchor="middle" font-size="8.5" font-style="italic" fill="#888">"What am I looking for?"</text>
+  <text x="310" y="123" text-anchor="middle" font-size="11.5" fill="#333"><tspan font-weight="bold">K</tspan> = X W<tspan baseline-shift="super" font-size="8">K</tspan></text>
+  <text x="310" y="140" text-anchor="middle" font-size="8.5" font-style="italic" fill="#888">"What do I contain?"</text>
+  <text x="500" y="123" text-anchor="middle" font-size="11.5" fill="#333"><tspan font-weight="bold">V</tspan> = X W<tspan baseline-shift="super" font-size="8">V</tspan></text>
+  <text x="500" y="140" text-anchor="middle" font-size="8.5" font-style="italic" fill="#888">"What info to pass?"</text>
+  <text x="310" y="172" text-anchor="middle" font-size="9" fill="#999">W<tspan baseline-shift="super" font-size="7">Q</tspan>, W<tspan baseline-shift="super" font-size="7">K</tspan>, W<tspan baseline-shift="super" font-size="7">V</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="7">d×d</tspan><tspan baseline-shift="sub" font-size="6">k</tspan> — learned projection matrices</text>
+  <!-- Score -->
+  <text x="215" y="233" text-anchor="middle" font-size="11.5" fill="#6c3483">Score = Q Kᵀ / √d<tspan baseline-shift="sub" font-size="8">k</tspan></text>
+  <text x="215" y="250" text-anchor="middle" font-size="8.5" fill="#888">dot-product similarity, scaled to prevent softmax saturation</text>
+  <!-- Softmax -->
+  <text x="215" y="323" text-anchor="middle" font-size="11.5" fill="#6c3483">A = softmax(Score)</text>
+  <text x="215" y="340" text-anchor="middle" font-size="8.5" fill="#888">attention weights A ∈ ℝ<tspan baseline-shift="super" font-size="7">n×n</tspan>, rows sum to 1</text>
+  <!-- Output -->
+  <text x="310" y="423" text-anchor="middle" font-size="11.5" fill="#1f7a72">Z = A V ∈ ℝ<tspan baseline-shift="super" font-size="8">n×d</tspan></text>
+  <text x="310" y="440" text-anchor="middle" font-size="8.5" fill="#888">attended output: each token is a weighted sum of all value vectors</text>
+  <!-- side label -->
+  <text x="525" y="285" text-anchor="middle" font-size="8.5" fill="#999" transform="rotate(-90 525 285)">Value pass-through</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 340" width="780" height="340" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <marker id="bn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+    </marker>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect width="780" height="340" fill="#ffffff"/>
+  <text x="390" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#2a2a2a">Batch Normalisation</text>
+
+  <g filter="url(#rough)">
+    <line x1="180" y1="105" x2="208" y2="105" stroke="#888" stroke-width="1.5" marker-end="url(#bn)"/>
+    <line x1="370" y1="105" x2="398" y2="105" stroke="#888" stroke-width="1.5" marker-end="url(#bn)"/>
+    <line x1="560" y1="105" x2="588" y2="105" stroke="#888" stroke-width="1.5" marker-end="url(#bn)"/>
+    <rect x="20"  y="58" width="160" height="94" rx="6" fill="#eef4fb" stroke="#4f86c6" stroke-width="1.7"/>
+    <rect x="210" y="58" width="160" height="94" rx="6" fill="#fff8e1" stroke="#e0972f" stroke-width="1.7"/>
+    <rect x="400" y="58" width="160" height="94" rx="6" fill="#edfaed" stroke="#5cb85c" stroke-width="1.7"/>
+    <rect x="590" y="58" width="160" height="94" rx="6" fill="#fdeaea" stroke="#d9534f" stroke-width="1.7"/>
+    <rect x="40" y="186" width="700" height="128" rx="6" fill="#fafafa" stroke="#cfcfcf" stroke-width="1"/>
+  </g>
+
+  <!-- batch box -->
+  <text x="100" y="92"  text-anchor="middle" font-size="11.5" font-weight="bold" fill="#2c5f93">Mini-Batch</text>
+  <text x="100" y="113" text-anchor="middle" font-size="11" fill="#333">{ z<tspan baseline-shift="super" font-size="8">(i)</tspan> }<tspan baseline-shift="sub" font-size="8">ℬ</tspan></text>
+  <text x="100" y="132" text-anchor="middle" font-size="9.5" fill="#888">B = batch size</text>
+  <!-- stats box -->
+  <text x="290" y="88"  text-anchor="middle" font-size="11" font-weight="bold" fill="#9a6b1e">Compute Statistics</text>
+  <text x="290" y="110" text-anchor="middle" font-size="10.5" fill="#333">μ<tspan baseline-shift="sub" font-size="7.5">ℬ</tspan> = (1/B) Σ<tspan baseline-shift="sub" font-size="7.5">i</tspan> z<tspan baseline-shift="super" font-size="7.5">(i)</tspan></text>
+  <text x="290" y="130" text-anchor="middle" font-size="10.5" fill="#333">σ<tspan baseline-shift="super" font-size="7.5">2</tspan> = (1/B) Σ<tspan baseline-shift="sub" font-size="7.5">i</tspan>(z<tspan baseline-shift="super" font-size="7.5">(i)</tspan> − μ)<tspan baseline-shift="super" font-size="7.5">2</tspan></text>
+  <!-- norm box -->
+  <text x="480" y="88"  text-anchor="middle" font-size="11" font-weight="bold" fill="#3a8a3a">Normalise</text>
+  <text x="480" y="111" text-anchor="middle" font-size="10.5" fill="#333">ẑ<tspan baseline-shift="super" font-size="7.5">(i)</tspan> = (z<tspan baseline-shift="super" font-size="7.5">(i)</tspan> − μ<tspan baseline-shift="sub" font-size="7.5">ℬ</tspan>) / √(σ<tspan baseline-shift="super" font-size="7.5">2</tspan>+ε)</text>
+  <text x="480" y="132" text-anchor="middle" font-size="9.5" fill="#888">ε ≈ 10<tspan baseline-shift="super" font-size="7">−5</tspan>  (stability)</text>
+  <!-- scale box -->
+  <text x="670" y="92"  text-anchor="middle" font-size="11" font-weight="bold" fill="#a83a36">Scale &amp; Shift</text>
+  <text x="670" y="114" text-anchor="middle" font-size="11" fill="#333">y<tspan baseline-shift="super" font-size="8">(i)</tspan> = γ ẑ<tspan baseline-shift="super" font-size="8">(i)</tspan> + β</text>
+  <text x="670" y="133" text-anchor="middle" font-size="9.5" fill="#888">γ, β learned</text>
+
+  <!-- why box -->
+  <text x="60" y="210" font-size="12" font-weight="bold" fill="#333">Why Batch Normalisation Helps</text>
+  <text x="60" y="233" font-size="11" fill="#444">1.  Reduces <tspan font-style="italic">internal covariate shift</tspan> — keeps layer inputs in a stable distribution.</text>
+  <text x="60" y="253" font-size="11" fill="#444">2.  Allows <tspan font-weight="bold">higher learning rates</tspan> without divergence.</text>
+  <text x="60" y="273" font-size="11" fill="#444">3.  Acts as a <tspan font-weight="bold">regulariser</tspan>, reducing reliance on dropout.</text>
+  <text x="60" y="293" font-size="11" fill="#444">4.  At <tspan font-weight="bold">inference</tspan>: use running mean μ̄ and running variance σ̄<tspan baseline-shift="super" font-size="8">2</tspan> (accumulated during training).</text>
+  <text x="60" y="309" font-size="9.5" font-style="italic" fill="#888">γ = 1, β = 0 initially — the model can learn to undo normalisation if beneficial.</text>
+</svg>
