@@ -11,8 +11,8 @@ on:
     # notes.json (i.e. the bot's own commit below) does NOT match, so there is
     # no trigger loop.
     paths:
-      - '**.md'
-      - 'scripts/build_manifest.py'
+      - 'notes/**.md'
+      - 'scripts/**'
       - '.github/workflows/build-notes-manifest.yml'
   workflow_dispatch:
 
